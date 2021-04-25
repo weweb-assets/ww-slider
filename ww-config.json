@@ -1,0 +1,45 @@
+{
+  "componentPath": "./src/wwObject.vue",
+  "editor": {
+    "label": {
+      "en": "Slider"
+    },
+    "settingsOptions": {
+      "slidesPerView": {
+        "type": "Number",
+        "label": {
+          "en": "Slides per view",
+          "fr": "Slides per view"
+        },
+        "options": {
+          "min": 1,
+          "max": 6,
+          "step": 1
+        }
+      },
+      "direction": {
+        "label": {
+          "en": "Direction",
+          "fr": "Direction"
+        },
+        "type": "TextSelect",
+        "options": {
+          "options": [
+            {
+              "value": "horizontal",
+              "label": { "en": "horizontal" }
+            },
+            { "value": "vertical", "label": { "en": "vertical" } }
+          ]
+        }
+      },
+      "loop": {
+        "type": "OnOff",
+        "label": {
+          "en": "Loop",
+          "fr": "Loop"
+        }
+      }
+    }
+  }
+}

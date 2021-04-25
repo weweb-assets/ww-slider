@@ -1,0 +1,15 @@
+{
+  "name": "ww-slider",
+  "version": "0.0.1",
+  "scripts": {
+    "build": "weweb build",
+    "serve": "weweb serve"
+  },
+  "dependencies": {
+    "swiper": "^6.5.7",
+    "vue": "^2.6.12"
+  },
+  "devDependencies": {
+    "@weweb/cli": "latest"
+  }
+}
