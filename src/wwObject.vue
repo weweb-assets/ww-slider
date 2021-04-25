@@ -4,17 +4,20 @@
     <!-- Additional required wrapper -->
     <div class="swiper-wrapper">
       <!-- Slides -->
-      <div class="swiper-slide">Slide 1</div>
-      <div class="swiper-slide">Slide 2</div>
-      <div class="swiper-slide">Slide 3</div>
-      ...
+      <div
+        class="swiper-slide"
+        v-for="(slide, index) in content.slides"
+        :key="index"
+      >
+        {{ "Slide " + (index + 1) }}
+      </div>
     </div>
     <!-- If we need pagination -->
     <div class="swiper-pagination"></div>
 
     <!-- If we need navigation buttons -->
-    <div class="swiper-button-prev"></div>
-    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev" @click="prevSlide"></div>
+    <div class="swiper-button-next" @click="nextSlide"></div>
 
     <!-- If we need scrollbar -->
     <div class="swiper-scrollbar"></div>
@@ -32,13 +35,15 @@ export default {
     content: { type: "Object", required: true },
   },
   wwDefaultContent: {
+    slides: 3,
     slidesPerView: 1,
     direction: "horizontal",
-    loop: false,
+    loop: true,
   },
   data() {
     return {
       swiper: null,
+      swiperInstance: null,
     };
   },
   watch: {
@@ -48,6 +53,12 @@ export default {
     },
   },
   methods: {
+    prevSlide() {
+      this.swiperInstance.slidePrev();
+    },
+    nextSlide() {
+      this.swiperInstance.slideNext();
+    },
     initSlider() {
       this.$nextTick(() => {
         this.swiper = new Swiper(".swiper-container", {
@@ -57,12 +68,23 @@ export default {
           direction: this.content.direction,
           loop: this.content.loop,
 
+          pagination: {
+            el: ".swiper-pagination",
+            type: "bullets",
+          },
+
           // Navigation arrows
           navigation: {
             nextEl: ".swiper-button-next",
             prevEl: ".swiper-button-prev",
           },
         });
+
+        this.swiperInstance = wwLib
+          .getFrontDocument()
+          .querySelector(".swiper-container").swiper;
+
+        console.log(this.swiperInstance);
       });
     },
     resetSlider() {

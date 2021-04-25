@@ -5,6 +5,18 @@
       "en": "Slider"
     },
     "settingsOptions": {
+      "slides": {
+        "type": "Number",
+        "label": {
+          "en": "Slides",
+          "fr": "Slides"
+        },
+        "options": {
+          "min": 1,
+          "max": 20,
+          "step": 1
+        }
+      },
       "slidesPerView": {
         "type": "Number",
         "label": {
