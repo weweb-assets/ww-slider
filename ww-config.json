@@ -6,16 +6,10 @@
     },
     "settingsOptions": {
       "slides": {
-        "type": "Number",
-        "label": {
-          "en": "Slides",
-          "fr": "Slides"
-        },
-        "options": {
-          "min": 1,
-          "max": 20,
-          "step": 1
-        }
+        "path": "slides",
+        "label": { "en": "Slides", "fr": "Slides" },
+        "type": "Tabs",
+        "itemsLabel": "Slide"
       },
       "slidesPerView": {
         "type": "Number",
@@ -27,6 +21,18 @@
           "min": 1,
           "max": 6,
           "step": 1
+        }
+      },
+      "spaceBetween": {
+        "type": "Length",
+        "label": {
+          "en": "Space between",
+          "fr": "Space between"
+        },
+        "options": {
+          "unitChoices": [
+            { "value": "px", "label": "px", "min": 1, "max": 1000 }
+          ]
         }
       },
       "direction": {
@@ -43,6 +49,36 @@
             },
             { "value": "vertical", "label": { "en": "vertical" } }
           ]
+        }
+      },
+      "effect": {
+        "label": {
+          "en": "Effect",
+          "fr": "Effect"
+        },
+        "type": "TextSelect",
+        "options": {
+          "options": [
+            { "value": "slide", "label": { "en": "slide" } },
+            { "value": "fade", "label": { "en": "fade" } },
+            { "value": "cube", "label": { "en": "cube" } },
+            { "value": "coverflow", "label": { "en": "coverflow" } },
+            { "value": "flip", "label": { "en": "flip" } }
+          ]
+        }
+      },
+      "navigation": {
+        "type": "OnOff",
+        "label": {
+          "en": "Navigation",
+          "fr": "Navigation"
+        }
+      },
+      "pagination": {
+        "type": "OnOff",
+        "label": {
+          "en": "Pagination",
+          "fr": "Pagination"
         }
       },
       "loop": {

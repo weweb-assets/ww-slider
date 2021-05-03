@@ -6,8 +6,9 @@
     "serve": "weweb serve"
   },
   "dependencies": {
-    "swiper": "^6.5.7",
-    "vue": "^2.6.12"
+    "swiper": "^6.5.8",
+    "vue": "^2.6.12",
+    "vue-awesome-swiper": "^4.1.1"
   },
   "devDependencies": {
     "@weweb/cli": "latest"
