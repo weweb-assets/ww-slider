@@ -58,7 +58,6 @@
 import Swiper from "swiper/bundle";
 // import Swiper styles
 import "swiper/swiper-bundle.css";
-import { nextTick } from "vue/types/umd";
 
 export default {
   props: {
