@@ -2,7 +2,7 @@
   <div class="element-container">
     <!-- {{ content.slides.items.length }} -->
     <!-- Slider main container -->
-    <div class="swiper-container">
+    <div :class="'swiper-container-' + uniqueID">
       <!-- Additional required wrapper -->
       <div class="swiper-wrapper">
         <!-- Slides -->
@@ -105,6 +105,7 @@ export default {
       swiperInstance: null,
       slidesLength: 0,
       sliderIndex: 0,
+      uniqueID: wwLib.wwUtils.getUniqueId(),
     };
   },
   computed: {
@@ -171,8 +172,8 @@ export default {
   },
   methods: {
     initSwiper() {
-      this.swiperInstance = null;
-      this.swiperInstance = new Swiper(".swiper-container", {
+      const elementClass = "swiper-container-" + uniqueID;
+      this.swiperInstance = new Swiper(elementClass, {
         // Optional parameters
         effect: this.content.effect,
         slidesPerView: this.content.slidesPerView,
