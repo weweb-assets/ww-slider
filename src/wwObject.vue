@@ -1,5 +1,6 @@
 <template>
   <div class="element-container">
+    <!-- {{ content.slides.items.length }} -->
     <!-- Slider main container -->
     <div class="swiper-container">
       <!-- Additional required wrapper -->
@@ -23,7 +24,7 @@
       <div
         class="bullet-container"
         @click="slideTo(index)"
-        v-for="(slide, index) in content.slides.items"
+        v-for="index in Math.ceil(bullets)"
         :key="index"
       >
         <wwObject
@@ -117,6 +118,9 @@ export default {
       // eslint-disable-next-line no-unreachable
       return false;
     },
+    bullets() {
+      return this.content.slides.items.length / this.content.slidesPerView;
+    },
   },
   watch: {
     "content.direction"() {
@@ -171,10 +175,6 @@ export default {
         loop: this.content.loop,
       });
       this.$nextTick(() => {
-        this.sliderIndex = this.swiperInstance.realIndex;
-      });
-
-      this.swiperInstance.on("slideChange", () => {
         this.sliderIndex = this.swiperInstance.realIndex;
       });
     },
