@@ -193,6 +193,13 @@ export default {
       });
     },
     slideTo(index) {
+      if (this.content.slidesPerView <= 1) {
+        this.swiperInstance.slideTo(
+          index + this.content.slidesPerView,
+          400,
+          false
+        );
+      }
       this.swiperInstance.slideTo(index, 400, false);
     },
     slideNext() {
