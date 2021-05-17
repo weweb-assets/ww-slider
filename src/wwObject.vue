@@ -30,7 +30,7 @@
         <wwObject
           class="bulletIcon"
           v-bind="content.bulletsIcons"
-          :states="index + 1 === sliderIndex ? ['active'] : []"
+          :states="index === sliderIndex ? ['active'] : []"
         ></wwObject>
       </div>
     </div>
@@ -105,7 +105,7 @@ export default {
     return {
       swiperInstance: null,
       slidesLength: 0,
-      sliderIndex: 0,
+      sliderIndex: 1,
     };
   },
   computed: {
