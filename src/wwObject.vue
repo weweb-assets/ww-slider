@@ -15,40 +15,43 @@
             :path="`slidesLayout[${index}]`"
             direction="column"
           ></wwLayout>
-          <!-- slide {{ index + 1 }} of {{ content.slides.items.length }} -->
         </div>
       </div>
+    </div>
 
-      <div class="bullets" v-show="content.pagination">
-        <div
-          class="bullet-container"
-          @click="slideTo(index)"
-          v-for="(slide, index) in content.slides.items"
-          :key="index"
-        >
-          <wwObject class="bulletIcon" v-bind="content.bulletsIcons"></wwObject>
-        </div>
-      </div>
+    <div class="bullets" v-show="content.pagination">
       <div
-        class="navigation-container"
-        v-show="content.navigation"
-        @click="slidePrev"
+        class="bullet-container"
+        @click="slideTo(index)"
+        v-for="(slide, index) in content.slides.items"
+        :key="index"
       >
         <wwObject
-          class="layout-prev"
-          v-bind="content.navigationIcons[0]"
+          class="bulletIcon"
+          v-bind="content.bulletsIcons"
+          :states="index === sliderIndex ? ['active'] : []"
         ></wwObject>
       </div>
-      <div
-        class="navigation-container"
-        v-show="content.navigation"
-        @click="slideNext"
-      >
-        <wwObject
-          class="layout-next"
-          v-bind="content.navigationIcons[1]"
-        ></wwObject>
-      </div>
+    </div>
+    <div
+      class="navigation-container"
+      v-show="content.navigation"
+      @click="slidePrev"
+    >
+      <wwObject
+        class="layout-prev"
+        v-bind="content.navigationIcons[0]"
+      ></wwObject>
+    </div>
+    <div
+      class="navigation-container"
+      v-show="content.navigation"
+      @click="slideNext"
+    >
+      <wwObject
+        class="layout-next"
+        v-bind="content.navigationIcons[1]"
+      ></wwObject>
     </div>
   </div>
 </template>
@@ -101,6 +104,7 @@ export default {
     return {
       swiperInstance: null,
       slidesLength: 0,
+      sliderIndex: 0,
     };
   },
   computed: {
@@ -113,55 +117,45 @@ export default {
       // eslint-disable-next-line no-unreachable
       return false;
     },
-    sliderType() {
-      switch (this.content.effect) {
-        case "cube":
-          return "cube";
-        case "coverflow":
-          return "coverflow";
-
-        default:
-          return "fade";
-      }
-    },
   },
   watch: {
     "content.direction"() {
-      this.swiperInstance.destroy();
+      this.swiperInstance.destroy(true, true);
       this.$nextTick(() => {
         this.initSwiper();
       });
     },
     "content.effect"() {
-      this.swiperInstance.destroy();
+      this.swiperInstance.destroy(true, true);
       this.$nextTick(() => {
         this.initSwiper();
       });
     },
     "content.slides"() {
-      this.swiperInstance.destroy();
+      this.swiperInstance.destroy(true, true);
       this.$nextTick(() => {
         this.initSwiper();
         this.currentSlide = this.content.slides.items.findIndex(
           (item) => item.checked
         );
-        this.swiperInstance.slideTo(this.currentSlide + 1, 0, false);
+
+        this.swiperInstance.slideTo(this.currentSlide, 0, false);
       });
     },
     "content.slidesPerView"() {
-      this.swiperInstance.destroy();
+      this.swiperInstance.destroy(true, true);
       this.$nextTick(() => {
         this.initSwiper();
       });
     },
     "content.spaceBetween"() {
-      this.swiperInstance.destroy();
+      this.swiperInstance.destroy(true, true);
       this.$nextTick(() => {
         this.initSwiper();
       });
     },
     "content.loop"() {
-      this.swiperInstance.destroy();
+      this.swiperInstance.destroy(true, true);
       this.$nextTick(() => {
         this.initSwiper();
       });
@@ -174,47 +168,18 @@ export default {
         effect: this.content.effect,
         slidesPerView: this.content.slidesPerView,
         spaceBetween: parseInt(this.content.spaceBetween.slice(0, -2)),
-        direction: this.content.direction,
         loop: this.content.loop,
-
-        // If we need pagination
-        pagination: {
-          el: ".swiper-pagination",
-          clickable: true,
-        },
-
-        // Navigation arrows
-        navigation: {
-          nextEl: ".swiper-button-next",
-          prevEl: ".swiper-button-prev",
-        },
-
-        // And if we need scrollbar
-        scrollbar: {
-          el: ".swiper-scrollbar",
-        },
+      });
+      this.$nextTick(() => {
+        this.sliderIndex = this.swiperInstance.realIndex;
       });
 
       this.swiperInstance.on("slideChange", () => {
-        console.log("changed");
-        // let slides = _.cloneDeep(this.content.slides);
-        // for (let item of slides.items) {
-        //   item.checked = false;
-        // }
-        // console.log(slides);
-        // slides.items[this.swiperInstance.realIndex].checked = true;
-        // console.log(slides);
-        // this.$emit("update", { slides });
-        // const bulletsLayoutStates = [];
-        // for (let bullet in this.content.slides.items) {
-        //   bulletsLayoutStates.push([""]);
-        // }
-        // bulletsLayoutStates[this.swiperInstance.realIndex] = ["currentSlide"];
-        // this.$emit("update", { bulletsLayoutStates });
+        this.sliderIndex = this.swiperInstance.realIndex;
       });
     },
     slideTo(index) {
-      this.swiperInstance.slideTo(index + 1, 400, false);
+      this.swiperInstance.slideTo(index, 400, false);
     },
     slideNext() {
       this.swiperInstance.slideNext(400);
@@ -230,6 +195,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.element-container {
+  position: relative;
+  .bullets {
+    pointer-events: all;
+    position: absolute;
+    bottom: 0px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+
+    display: flex;
+    flex-direction: row;
+
+    .bullet-container {
+      height: 20px;
+    }
+  }
+}
+
 .swiper-container {
   width: 100%;
   height: 100%;
@@ -269,22 +253,6 @@ export default {
     align-items: stretch;
   }
 }
-
-.bullets {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1000;
-
-  display: flex;
-  flex-direction: row;
-
-  .bullet-container {
-    height: 20px;
-  }
-}
-
 .layout-prev {
   width: 100px;
   position: absolute;
@@ -301,21 +269,5 @@ export default {
   right: 0;
   transform: translateY(-50%);
   z-index: 1000;
-}
-
-.swiper-pagination-bullet {
-  width: 20px;
-  height: 20px !important;
-  text-align: center;
-  line-height: 20px;
-  font-size: 12px;
-  color: #000;
-  opacity: 1;
-  background: rgba(0, 0, 0, 0.2);
-}
-
-.swiper-pagination-bullet-active {
-  color: #fff;
-  background: #007aff;
 }
 </style>

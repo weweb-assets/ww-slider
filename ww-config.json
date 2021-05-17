@@ -60,10 +60,7 @@
         "options": {
           "options": [
             { "value": "slide", "label": { "en": "slide" } },
-            { "value": "fade", "label": { "en": "fade" } },
-            { "value": "cube", "label": { "en": "cube" } },
-            { "value": "coverflow", "label": { "en": "coverflow" } },
-            { "value": "flip", "label": { "en": "flip" } }
+            { "value": "fade", "label": { "en": "fade" } }
           ]
         }
       },
