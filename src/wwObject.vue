@@ -176,6 +176,9 @@ export default {
       });
       this.$nextTick(() => {
         this.sliderIndex = this.swiperInstance.realIndex;
+        this.swiperInstance.on("change", () => {
+          this.sliderIndex = this.swiperInstance.realIndex;
+        });
       });
     },
     slideTo(index) {
