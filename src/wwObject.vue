@@ -193,7 +193,7 @@ export default {
       });
     },
     slideTo(index) {
-      if (this.content.slidesPerView <= 1) {
+      if (this.content.slidesPerView >= 1) {
         this.swiperInstance.slideTo(
           index + this.content.slidesPerView,
           400,
