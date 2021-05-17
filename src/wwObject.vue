@@ -172,8 +172,7 @@ export default {
   },
   methods: {
     initSwiper() {
-      const elementClass = "swiper-container-" + uniqueID;
-      this.swiperInstance = new Swiper(elementClass, {
+      this.swiperInstance = new Swiper(`swiper-container-${this.uniqueID}`, {
         // Optional parameters
         effect: this.content.effect,
         slidesPerView: this.content.slidesPerView,
