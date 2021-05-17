@@ -24,7 +24,7 @@
       <div
         class="bullet-container"
         v-for="index in Math.ceil(bullets)"
-        @click="slideTo(index + 1)"
+        @click="slideTo(index - 1)"
         :key="index"
       >
         <wwObject
@@ -92,7 +92,6 @@ export default {
     bulletsLayout: [],
     bulletsLayoutStates: [],
     slidesPerView: 1,
-    direction: "horizontal",
     effect: "slide",
     navigation: true,
     loop: false,
@@ -105,7 +104,7 @@ export default {
     return {
       swiperInstance: null,
       slidesLength: 0,
-      sliderIndex: 1,
+      sliderIndex: 0,
     };
   },
   computed: {
@@ -177,7 +176,7 @@ export default {
       });
       this.$nextTick(() => {
         this.sliderIndex = this.swiperInstance.realIndex;
-        this.swiperInstance.on("change", () => {
+        this.swiperInstance.on("activeIndexChange", () => {
           this.sliderIndex = this.swiperInstance.realIndex;
         });
       });
