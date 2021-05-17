@@ -175,13 +175,16 @@ export default {
   },
   methods: {
     initSwiper() {
-      this.swiperInstance = new Swiper(".swiper-container", {
-        // Optional parameters
-        effect: this.content.effect,
-        slidesPerView: this.content.slidesPerView,
-        spaceBetween: parseInt(this.content.spaceBetween.slice(0, -2)),
-        loop: this.content.loop,
-      });
+      this.swiperInstance = new Swiper(
+        `.unique-swipper-container-${this.uniqueID}`,
+        {
+          // Optional parameters
+          effect: this.content.effect,
+          slidesPerView: this.content.slidesPerView,
+          spaceBetween: parseInt(this.content.spaceBetween.slice(0, -2)),
+          loop: this.content.loop,
+        }
+      );
       this.$nextTick(() => {
         this.sliderIndex = this.swiperInstance.realIndex;
         this.swiperInstance.on("activeIndexChange", () => {
