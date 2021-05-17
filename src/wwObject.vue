@@ -2,7 +2,10 @@
   <div class="element-container">
     <!-- {{ content.slides.items.length }} -->
     <!-- Slider main container -->
-    <div class="swiper-container">
+    <div
+      class="swiper-container"
+      :class="'unique-swipper-container-' + uniqueID"
+    >
       <!-- Additional required wrapper -->
       <div class="swiper-wrapper">
         <!-- Slides -->
