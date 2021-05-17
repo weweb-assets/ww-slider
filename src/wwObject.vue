@@ -124,7 +124,7 @@ export default {
   watch: {
     isEditing() {
       this.$nextTick(() => {
-        this.sliderIndex = this.swiperInstance.realIndex;
+        this.sliderIndex = this.swiperInstance.realIndex - 1;
       });
     },
     "content.direction"() {
