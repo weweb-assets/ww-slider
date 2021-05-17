@@ -23,14 +23,14 @@
     <div class="bullets" v-show="content.pagination">
       <div
         class="bullet-container"
-        @click="slideTo(index)"
         v-for="index in Math.ceil(bullets)"
+        @click="slideTo(index + 1)"
         :key="index"
       >
         <wwObject
           class="bulletIcon"
           v-bind="content.bulletsIcons"
-          :states="index === sliderIndex ? ['active'] : []"
+          :states="index + 1 === sliderIndex ? ['active'] : []"
         ></wwObject>
       </div>
     </div>
