@@ -124,7 +124,7 @@ export default {
   },
   watch: {
     isEditing() {
-      if (isEditing) {
+      if (this.isEditing) {
         this.swiperInstance.params.allowTouchMove = false;
       } else {
         this.swiperInstance.params.allowTouchMove = true;
@@ -180,6 +180,7 @@ export default {
         slidesPerView: this.content.slidesPerView,
         spaceBetween: parseInt(this.content.spaceBetween.slice(0, -2)),
         loop: this.content.loop,
+        allowTouchMove: this.isEditing ? false : true,
       });
       this.$nextTick(() => {
         this.sliderIndex = this.swiperInstance.realIndex;
@@ -192,12 +193,12 @@ export default {
       this.swiperInstance.slideTo(index, 400, false);
     },
     slideNext() {
-      if (!isEditing) {
+      if (!this.isEditing) {
         this.swiperInstance.slideNext(400);
       }
     },
     slidePrev() {
-      if (!isEditing) {
+      if (!this.isEditing) {
         this.swiperInstance.slidePrev(400);
       }
     },
