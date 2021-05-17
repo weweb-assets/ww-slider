@@ -123,6 +123,13 @@ export default {
     },
   },
   watch: {
+    isEditing() {
+      if (isEditing) {
+        this.swiperInstance.params.allowTouchMove = false;
+      } else {
+        this.swiperInstance.params.allowTouchMove = true;
+      }
+    },
     "content.direction"() {
       this.swiperInstance.destroy(true, true);
       this.$nextTick(() => {
@@ -185,10 +192,14 @@ export default {
       this.swiperInstance.slideTo(index, 400, false);
     },
     slideNext() {
-      this.swiperInstance.slideNext(400);
+      if (!isEditing) {
+        this.swiperInstance.slideNext(400);
+      }
     },
     slidePrev() {
-      this.swiperInstance.slidePrev(400);
+      if (!isEditing) {
+        this.swiperInstance.slidePrev(400);
+      }
     },
   },
   mounted() {
