@@ -1,13 +1,12 @@
 <template>
   <div class="element-container">
-    <!-- {{ content.slides.items.length }} -->
     <!-- Slider main container -->
     <div :class="'swiper-container-' + uniqueID">
       <!-- Additional required wrapper -->
-      <div class="swiper-wrapper">
+      <div :class="'swiper-wrapper-' + uniqueID">
         <!-- Slides -->
         <div
-          class="swiper-slide"
+          :class="'swiper-slide-' + uniqueID"
           v-for="(slide, index) in content.slides.items"
           :key="index"
         >
@@ -105,7 +104,7 @@ export default {
       swiperInstance: null,
       slidesLength: 0,
       sliderIndex: 0,
-      uniqueID: wwLib.wwUtils.getUniqueId(),
+      uniqueID: 0,
     };
   },
   computed: {
@@ -185,6 +184,8 @@ export default {
           this.sliderIndex = this.swiperInstance.realIndex;
         });
       });
+      console.log(this.$el);
+      console.log(`.swiper-container-${this.uniqueID}`);
     },
     slideTo(index) {
       this.swiperInstance.slideTo(index, 400, false);
@@ -198,6 +199,9 @@ export default {
   },
   mounted() {
     this.initSwiper();
+  },
+  created() {
+    this.uniqueID = wwLib.wwUtils.getUniqueId();
   },
 };
 </script>
