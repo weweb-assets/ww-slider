@@ -122,6 +122,11 @@ export default {
     },
   },
   watch: {
+    isEditing() {
+      this.$nextTick(() => {
+        this.sliderIndex = this.swiperInstance.realIndex;
+      });
+    },
     "content.direction"() {
       this.swiperInstance.destroy(true, true);
       this.$nextTick(() => {
