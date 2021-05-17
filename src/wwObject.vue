@@ -30,7 +30,7 @@
         <wwObject
           class="bulletIcon"
           v-bind="content.bulletsIcons"
-          :states="index + 1 === sliderIndex ? ['active'] : []"
+          :states="index - 1 === sliderIndex ? ['active'] : []"
         ></wwObject>
       </div>
     </div>
@@ -167,6 +167,7 @@ export default {
   },
   methods: {
     initSwiper() {
+      this.swiperInstance = null;
       this.swiperInstance = new Swiper(".swiper-container", {
         // Optional parameters
         effect: this.content.effect,
@@ -182,7 +183,8 @@ export default {
       });
     },
     slideTo(index) {
-      this.swiperInstance.slideTo(index, 400, false);
+      console.log(this);
+      this.swiperInstance.slideTo(index - 1, 400, false);
     },
     slideNext() {
       this.swiperInstance.slideNext(400);
