@@ -183,8 +183,7 @@ export default {
       });
     },
     slideTo(index) {
-      console.log(this);
-      this.swiperInstance.slideTo(index - 1, 400, false);
+      this.swiperInstance.slideTo(index, 400, false);
     },
     slideNext() {
       this.swiperInstance.slideNext(400);
