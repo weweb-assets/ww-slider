@@ -122,8 +122,7 @@ export default {
       return false;
     },
     bullets() {
-      // return this.content.slides.items.length / this.content.slidesPerView;
-      return this.content.slides.items.length;
+      return this.content.slides.items.length - this.content.slidesPerView + 1;
     },
   },
   watch: {
