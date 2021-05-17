@@ -1,12 +1,13 @@
 <template>
   <div class="element-container">
+    <!-- {{ content.slides.items.length }} -->
     <!-- Slider main container -->
-    <div :class="'swiper-container-' + uniqueID">
+    <div class="swiper-container">
       <!-- Additional required wrapper -->
-      <div :class="'swiper-wrapper-' + uniqueID">
+      <div class="swiper-wrapper">
         <!-- Slides -->
         <div
-          :class="'swiper-slide-' + uniqueID"
+          class="swiper-slide"
           v-for="(slide, index) in content.slides.items"
           :key="index"
         >
@@ -171,7 +172,7 @@ export default {
   },
   methods: {
     initSwiper() {
-      this.swiperInstance = new Swiper(`.swiper-container-${this.uniqueID}`, {
+      this.swiperInstance = new Swiper(''.swiper-container', {
         // Optional parameters
         effect: this.content.effect,
         slidesPerView: this.content.slidesPerView,
@@ -184,8 +185,6 @@ export default {
           this.sliderIndex = this.swiperInstance.realIndex;
         });
       });
-      console.log(this.$el);
-      console.log(`.swiper-container-${this.uniqueID}`);
     },
     slideTo(index) {
       this.swiperInstance.slideTo(index, 400, false);
