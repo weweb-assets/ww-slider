@@ -244,7 +244,6 @@ export default {
   position: relative;
   text-align: center;
   font-size: 18px;
-  background: #fff;
 
   /* Center slide text vertically */
   display: -webkit-box;
