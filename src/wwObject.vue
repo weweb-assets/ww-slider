@@ -127,8 +127,9 @@ export default {
   },
   watch: {
     isEditing() {
+      this.swiperInstance.destroy(true, true);
       this.$nextTick(() => {
-        this.sliderIndex = this.swiperInstance.realIndex - 1;
+        this.initSwiper();
       });
     },
     "content.direction"() {
@@ -178,11 +179,11 @@ export default {
       this.swiperInstance = new Swiper(
         `.unique-swipper-container-${this.uniqueID}`,
         {
-          // Optional parameters
           effect: this.content.effect,
           slidesPerView: this.content.slidesPerView,
           spaceBetween: parseInt(this.content.spaceBetween.slice(0, -2)),
           loop: this.content.loop,
+          allowTouchMove: this.isEditing ? false : true,
         }
       );
       this.$nextTick(() => {
@@ -196,9 +197,11 @@ export default {
       this.swiperInstance.slideTo(index, 400, false);
     },
     slideNext() {
+      if (this.isEditing) return;
       this.swiperInstance.slideNext(400);
     },
     slidePrev() {
+      if (this.isEditing) return;
       this.swiperInstance.slidePrev(400);
     },
   },
