@@ -223,7 +223,7 @@ export default {
     bottom: 0px;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 1000;
+    z-index: 2;
 
     display: flex;
     flex-direction: row;
@@ -244,6 +244,7 @@ export default {
 }
 
 .swiper-slide {
+  z-index: 1;
   position: relative;
   text-align: center;
   font-size: 18px;
@@ -278,7 +279,7 @@ export default {
   top: 50%;
   left: 0;
   transform: translateY(-50%);
-  z-index: 1000;
+  z-index: 2;
 }
 
 .layout-next {
@@ -287,6 +288,6 @@ export default {
   top: 50%;
   right: 0;
   transform: translateY(-50%);
-  z-index: 1000;
+  z-index: 2;
 }
 </style>
