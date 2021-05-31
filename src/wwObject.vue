@@ -65,6 +65,9 @@
 import Swiper from "swiper/bundle";
 // import Swiper styles
 import "swiper/swiper-bundle.css";
+/* wwEditor:start */
+import { getSettingsConfigurations } from "./configuration";
+/* wwEditor:end */
 
 export default {
   props: {
@@ -96,19 +99,28 @@ export default {
     bulletsLayoutStates: [],
     slidesPerView: wwLib.responsive(1),
     effect: "slide",
+    transitionDuration: "400ms",
+    automaticTiming: "3s",
     navigation: true,
     loop: false,
     pagination: true,
     spaceBetween: wwLib.responsive("0px"),
     navigationIcons: [wwLib.element("ww-icon"), wwLib.element("ww-icon")],
     bulletsIcons: wwLib.element("ww-icon"),
+    automatic: false,
   },
+  /* wwEditor:start */
+  wwEditorConfiguration({ content }) {
+    return getSettingsConfigurations(content);
+  },
+  /* wwEditor:end */
   data() {
     return {
       swiperInstance: null,
       slidesLength: 0,
       sliderIndex: 0,
       uniqueID: 0,
+      intervalHolder: null,
     };
   },
   computed: {
@@ -123,6 +135,16 @@ export default {
     },
     bullets() {
       return this.content.slides.items.length - this.content.slidesPerView + 1;
+    },
+    transitionDuration() {
+      let value = this.content.transitionDuration;
+      value = value.substring(0, value.length - 2);
+      return parseInt(value);
+    },
+    automaticTiming() {
+      let value = this.content.automaticTiming;
+      value = value.substring(0, value.length - 1);
+      return parseInt(value);
     },
   },
   watch: {
@@ -170,6 +192,22 @@ export default {
     "content.loop"() {
       this.swiperInstance.destroy(true, true);
       this.$nextTick(() => {
+        if (!this.content.loop) {
+          this.$emit("update", { automatic: false });
+        }
+        this.initSwiper();
+      });
+    },
+    "content.automatic"() {
+      this.swiperInstance.destroy(true, true);
+      this.$nextTick(() => {
+        if (this.content.automatic) {
+          this.$emit("update", { loop: true });
+          this.automate();
+        } else {
+          this.$emit("update", { loop: false });
+          clearInterval(this.intervalHolder);
+        }
         this.initSwiper();
       });
     },
@@ -186,23 +224,30 @@ export default {
           allowTouchMove: this.isEditing ? false : true,
         }
       );
-      this.$nextTick(() => {
-        this.sliderIndex = this.swiperInstance.realIndex;
-        this.swiperInstance.on("activeIndexChange", () => {
+      if (this.swiperInstance) {
+        this.$nextTick(() => {
           this.sliderIndex = this.swiperInstance.realIndex;
+          this.swiperInstance.on("activeIndexChange", () => {
+            this.sliderIndex = this.swiperInstance.realIndex;
+          });
         });
-      });
+      }
     },
     slideTo(index) {
-      this.swiperInstance.slideTo(index, 400, false);
+      this.swiperInstance.slideTo(index, this.transitionDuration, false);
     },
     slideNext() {
       if (this.isEditing) return;
-      this.swiperInstance.slideNext(400);
+      this.swiperInstance.slideNext(this.transitionDuration);
     },
     slidePrev() {
       if (this.isEditing) return;
-      this.swiperInstance.slidePrev(400);
+      this.swiperInstance.slidePrev(this.transitionDuration);
+    },
+    automate() {
+      this.intervalHolder = setInterval(() => {
+        this.slideNext();
+      }, this.automaticTiming * 1000);
     },
   },
   mounted() {
