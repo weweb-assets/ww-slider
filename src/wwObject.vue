@@ -254,6 +254,9 @@ export default {
   },
   mounted() {
     this.initSwiper();
+    if (this.content.automatic) {
+      this.automate();
+    }
   },
   created() {
     this.uniqueID = wwLib.wwUtils.getUniqueId();
