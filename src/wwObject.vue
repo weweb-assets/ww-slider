@@ -224,13 +224,15 @@ export default {
           allowTouchMove: this.isEditing ? false : true,
         }
       );
-      if (this.swiperInstance) {
+      try {
         this.$nextTick(() => {
           this.sliderIndex = this.swiperInstance.realIndex;
           this.swiperInstance.on("activeIndexChange", () => {
             this.sliderIndex = this.swiperInstance.realIndex;
           });
         });
+      } catch (error) {
+        console.log("Slider instance not found:", error);
       }
     },
     slideTo(index) {
