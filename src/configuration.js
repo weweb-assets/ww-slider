@@ -89,7 +89,27 @@ const options = (content) => {
                 fr: "Timing",
               },
               options: {
-                unitChoices: [{ value: "s", label: "s", min: 1, max: 20 }],
+                unitChoices: [{ value: "s", label: "s", min: 0, max: 20 }],
+              },
+            },
+          }
+        : {};
+    })(),
+    freeMode: {
+      type: "OnOff",
+      label: {
+        en: "Free mode",
+        fr: "Free mode",
+      },
+    },
+    ...(function() {
+      return content.freeMode
+        ? {
+            linearTransition: {
+              type: "OnOff",
+              label: {
+                en: "Linear transition",
+                fr: "Linear transition",
               },
             },
           }

@@ -1,10 +1,10 @@
 <template>
-  <div class="element-container">
+  <div class="element-container" :style="cssVariables">
     <!-- {{ content.slides.items.length }} -->
     <!-- Slider main container -->
     <div
       class="swiper-container"
-      :class="'unique-swipper-container-' + uniqueID"
+      :class="'swiper-free-mode ' + 'unique-swipper-container-' + uniqueID"
     >
       <!-- Additional required wrapper -->
       <div class="swiper-wrapper">
@@ -108,6 +108,8 @@ export default {
     navigationIcons: [wwLib.element("ww-icon"), wwLib.element("ww-icon")],
     bulletsIcons: wwLib.element("ww-icon"),
     automatic: false,
+    freeMode: false,
+    linearTransition: false,
   },
   /* wwEditor:start */
   wwEditorConfiguration({ content }) {
@@ -146,10 +148,24 @@ export default {
       value = value.substring(0, value.length - 1);
       return parseInt(value);
     },
+    cssVariables() {
+      return {
+        "--timing-function": this.content.linearTransition ? "linear" : "auto",
+      };
+    },
   },
   watch: {
     isEditing() {
       this.swiperInstance.destroy(true, true);
+      this.$nextTick(() => {
+        this.initSwiper();
+      });
+    },
+    "content.freeMode"() {
+      this.swiperInstance.destroy(true, true);
+      if (!this.content.freeMode) {
+        this.$emit("update", { linearTransition: false });
+      }
       this.$nextTick(() => {
         this.initSwiper();
       });
@@ -198,6 +214,19 @@ export default {
         this.initSwiper();
       });
     },
+    "content.automaticTiming"() {
+      this.swiperInstance.destroy(true, true);
+      this.$nextTick(() => {
+        if (this.content.automatic) {
+          this.$emit("update", { loop: true });
+          this.automate();
+        } else {
+          this.$emit("update", { loop: false });
+          clearInterval(this.intervalHolder);
+        }
+        this.initSwiper();
+      });
+    },
     "content.automatic"() {
       this.swiperInstance.destroy(true, true);
       this.$nextTick(() => {
@@ -218,10 +247,17 @@ export default {
         `.unique-swipper-container-${this.uniqueID}`,
         {
           effect: this.content.effect,
+          fadeEffect:
+            this.content.effect === "fade"
+              ? {
+                  crossFade: true,
+                }
+              : null,
           slidesPerView: this.content.slidesPerView,
           spaceBetween: parseInt(this.content.spaceBetween.slice(0, -2)),
           loop: this.content.loop,
           allowTouchMove: this.isEditing ? false : true,
+          freeMode: this.content.freeMode ? true : false,
         }
       );
       try {
@@ -291,6 +327,10 @@ export default {
 
 .swiper-wrapper {
   position: relative;
+}
+
+.swiper-free-mode > .swiper-wrapper {
+  transition-timing-function: var(--timing-function);
 }
 
 .swiper-slide {
