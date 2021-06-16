@@ -79,7 +79,7 @@ const options = (content) => {
         fr: "Automatic",
       },
     },
-    ...(function() {
+    ...(function () {
       return content.automatic
         ? {
             automaticTiming: {
@@ -92,19 +92,6 @@ const options = (content) => {
                 unitChoices: [{ value: "s", label: "s", min: 0, max: 20 }],
               },
             },
-          }
-        : {};
-    })(),
-    freeMode: {
-      type: "OnOff",
-      label: {
-        en: "Free mode",
-        fr: "Free mode",
-      },
-    },
-    ...(function() {
-      return content.freeMode
-        ? {
             linearTransition: {
               type: "OnOff",
               label: {

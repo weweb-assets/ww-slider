@@ -108,7 +108,6 @@ export default {
     navigationIcons: [wwLib.element("ww-icon"), wwLib.element("ww-icon")],
     bulletsIcons: wwLib.element("ww-icon"),
     automatic: false,
-    freeMode: false,
     linearTransition: false,
   },
   /* wwEditor:start */
@@ -157,15 +156,6 @@ export default {
   watch: {
     isEditing() {
       this.swiperInstance.destroy(true, true);
-      this.$nextTick(() => {
-        this.initSwiper();
-      });
-    },
-    "content.freeMode"() {
-      this.swiperInstance.destroy(true, true);
-      if (!this.content.freeMode) {
-        this.$emit("update", { linearTransition: false });
-      }
       this.$nextTick(() => {
         this.initSwiper();
       });
@@ -257,7 +247,7 @@ export default {
           spaceBetween: parseInt(this.content.spaceBetween.slice(0, -2)),
           loop: this.content.loop,
           allowTouchMove: this.isEditing ? false : true,
-          freeMode: this.content.freeMode ? true : false,
+          freeMode: this.content.linearTransition ? true : false,
         }
       );
       try {
