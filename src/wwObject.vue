@@ -1,6 +1,5 @@
 <template>
   <div class="element-container" :style="cssVariables">
-    <!-- {{ content.slides.items.length }} -->
     <!-- Slider main container -->
     <div
       class="swiper-container"
@@ -37,21 +36,13 @@
         ></wwObject>
       </div>
     </div>
-    <div
-      class="navigation-container"
-      v-show="content.navigation"
-      @click="slidePrev"
-    >
+    <div class="navigation-container" v-show="showLeftNav" @click="slidePrev">
       <wwObject
         class="layout-prev"
         v-bind="content.navigationIcons[0]"
       ></wwObject>
     </div>
-    <div
-      class="navigation-container"
-      v-show="content.navigation"
-      @click="slideNext"
-    >
+    <div class="navigation-container" v-show="showRightNav" @click="slideNext">
       <wwObject
         class="layout-next"
         v-bind="content.navigationIcons[1]"
@@ -133,6 +124,20 @@ export default {
       /* wwEditor:end */
       // eslint-disable-next-line no-unreachable
       return false;
+    },
+    showLeftNav() {
+      const isNav = this.content.navigation;
+      const isFirst = this.sliderIndex > 0 || this.content.loop;
+
+      return isNav && isFirst;
+    },
+    showRightNav() {
+      const isNav = this.content.navigation;
+      const isFirst =
+        this.sliderIndex < this.content.slides.items.length - 1 ||
+        this.content.loop;
+
+      return isNav && isFirst;
     },
     bullets() {
       return this.content.slides.items.length - this.content.slidesPerView + 1;
