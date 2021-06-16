@@ -126,18 +126,16 @@ export default {
       return false;
     },
     showLeftNav() {
-      const isNav = this.content.navigation;
       const isFirst = this.sliderIndex > 0 || this.content.loop;
 
-      return isNav && isFirst;
+      return this.content.navigation && isFirst;
     },
     showRightNav() {
-      const isNav = this.content.navigation;
-      const isFirst =
+      const isLast =
         this.sliderIndex < this.content.slides.items.length - 1 ||
         this.content.loop;
 
-      return isNav && isFirst;
+      return this.content.navigation && isLast;
     },
     bullets() {
       return this.content.slides.items.length - this.content.slidesPerView + 1;
