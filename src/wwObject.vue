@@ -26,13 +26,13 @@
       <div
         class="bullet-container"
         v-for="index in Math.ceil(bullets)"
-        @click="slideTo(index + 1)"
+        @click="slideTo(index - 1)"
         :key="index"
       >
         <wwObject
           class="bulletIcon"
           v-bind="content.bulletsIcons"
-          :states="index + 1 === sliderIndex ? ['active'] : []"
+          :states="index === sliderIndex + 1 ? ['active'] : []"
         ></wwObject>
       </div>
     </div>
