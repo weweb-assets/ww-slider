@@ -72,15 +72,15 @@ export default {
       items: [
         {
           checked: true,
+          index: 0,
+        },
+        {
+          checked: false,
           index: 1,
         },
         {
           checked: false,
           index: 2,
-        },
-        {
-          checked: false,
-          index: 3,
         },
       ],
       target: null,
@@ -200,7 +200,7 @@ export default {
           (item) => item.checked
         );
 
-        this.swiperInstance.slideTo(this.currentSlide, 0, false);
+        this.swiperInstance.slideTo(this.currentSlide + 1, 0, false);
       });
     },
     "content.slidesPerView"() {
