@@ -72,15 +72,15 @@ export default {
       items: [
         {
           checked: true,
-          index: 0,
-        },
-        {
-          checked: false,
           index: 1,
         },
         {
           checked: false,
           index: 2,
+        },
+        {
+          checked: false,
+          index: 3,
         },
       ],
       target: null,
