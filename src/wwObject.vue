@@ -157,6 +157,23 @@ export default {
     },
   },
   watch: {
+    "content.slides.items"() {
+      this.swiperInstance.destroy(true, true);
+
+      if (this.content.slides.target) {
+        const slidesLayout = [...this.content.slidesLayout];
+        slidesLayout.splice(this.content.slides.target, 1);
+
+        this.$emit("update", {
+          slidesLayout,
+          slides: { ...this.content.slides, target: null },
+        });
+      }
+
+      this.$nextTick(() => {
+        this.initSwiper();
+      });
+    },
     isEditing() {
       this.swiperInstance.destroy(true, true);
       this.$nextTick(() => {
