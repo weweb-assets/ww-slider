@@ -32,7 +32,7 @@
         <wwObject
           class="bulletIcon"
           v-bind="content.bulletsIcons"
-          :states="index === sliderIndex + 1 ? ['active'] : []"
+          :states="index + 1 === sliderIndex ? ['active'] : []"
         ></wwObject>
       </div>
     </div>
