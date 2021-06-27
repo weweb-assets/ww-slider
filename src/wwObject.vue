@@ -157,8 +157,22 @@ export default {
     },
   },
   watch: {
-    "content.slides.items"() {
+    "content.slides.items"(newValue, oldValue) {
       this.swiperInstance.destroy(true, true);
+
+      if (newValue.length > oldValue.length) {
+        const slidesLayout = [...this.content.slidesLayout];
+        if (slidesLayout[this.content.slides.items.length - 2]) {
+          slidesLayout[this.content.slides.items.length - 1] =
+            slidesLayout[this.content.slides.items.length - 2];
+
+          console.log(this.content.slidesLayout);
+        } else {
+          slidesLayout[this.content.slides.items.length - 1] = slidesLayout[0];
+        }
+
+        this.$emit("update", { slidesLayout });
+      }
 
       if (this.content.slides.target) {
         const slidesLayout = [...this.content.slidesLayout];
@@ -299,6 +313,9 @@ export default {
     },
   },
   mounted() {
+    this.content.numberOfSlides = this.content.slides.items.length;
+    console.log(this.content.numberOfSlides);
+
     this.initSwiper();
     if (this.content.automatic) {
       this.automate();
