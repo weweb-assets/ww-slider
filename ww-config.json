@@ -1,8 +1,8 @@
 {
-  "componentPath": "./src/wwObject.vue",
-  "editor": {
-    "label": {
-      "en": "Slider"
+    "componentPath": "./src/wwElement.vue",
+    "editor": {
+        "label": {
+            "en": "Slider"
+        }
     }
-  }
 }
