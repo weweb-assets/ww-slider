@@ -16,14 +16,14 @@
                     class="bulletIcon"
                     v-bind="content.bulletsIcons"
                     :states="index - 1 === sliderIndex ? ['active'] : []"
-                ></wwElement>
+                />
             </div>
         </div>
         <div v-show="showLeftNav" class="navigation-container" @click="slidePrev">
-            <wwElement class="layout-prev" v-bind="content.navigationIcons[0]"></wwElement>
+            <wwElement class="layout-prev" v-bind="content.navigationIcons[0]" />
         </div>
         <div v-show="showRightNav" class="navigation-container" @click="slideNext">
-            <wwElement class="layout-next" v-bind="content.navigationIcons[1]"></wwElement>
+            <wwElement class="layout-next" v-bind="content.navigationIcons[1]" />
         </div>
     </div>
 </template>
