@@ -92,10 +92,6 @@ export default {
         },
     },
     watch: {
-        isEditing() {
-            // if (this.swiperInstance) this.swiperInstance.destroy(true, true);
-            // this.initSwiper();
-        },
         'content.direction'() {
             this.swiperInstance.destroy(true, true);
             this.$nextTick(() => {
@@ -169,10 +165,6 @@ export default {
                 slidesPerView: this.content.slidesPerView,
                 spaceBetween: parseInt(this.content.spaceBetween.slice(0, -2)),
                 loop: this.content.loop,
-                allowTouchMove: true,
-                /* wwEditor:start */
-                allowTouchMove: false,
-                /* wwEditor:end */
                 freeMode: this.content.linearTransition ? true : false,
             });
             try {
