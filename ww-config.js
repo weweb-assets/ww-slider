@@ -160,11 +160,14 @@ export default {
         },
         navigationIcons: {
             hidden: true,
-            defaultValue: [wwLib.element('ww-icon'), wwLib.element('ww-icon')],
+            defaultValue: [
+                { isWwObject: true, type: 'ww-icon' },
+                { isWwObject: true, type: 'ww-icon' },
+            ],
         },
         bulletsIcons: {
             hidden: true,
-            defaultValue: wwLib.element('ww-icon'),
+            defaultValue: { isWwObject: true, type: 'ww-icon' },
         },
     },
 };
