@@ -1,6 +1,5 @@
 <template>
     <div class="element-container" :style="cssVariables">
-        {{ sliderIndex }}
         <!-- Slider main container -->
         <div class="swiper-container" :class="'swiper-free-mode ' + 'unique-swipper-container-' + uniqueID">
             <!-- Additional required wrapper -->
@@ -13,7 +12,6 @@
         </div>
         <div v-show="content.pagination" class="bullets">
             <div v-for="index in Math.ceil(bullets)" :key="index" class="bullet-container" @click="slideTo(index - 1)">
-                {{ index }}
                 <wwElement
                     class="bulletIcon"
                     v-bind="content.bulletsIcons"
@@ -171,9 +169,9 @@ export default {
                 slidesPerView: this.content.slidesPerView,
                 spaceBetween: parseInt(this.content.spaceBetween.slice(0, -2)),
                 loop: this.content.loop,
-                allowTouchMove: false,
-                /* wwEditor:start */
                 allowTouchMove: true,
+                /* wwEditor:start */
+                allowTouchMove: false,
                 /* wwEditor:end */
                 freeMode: this.content.linearTransition ? true : false,
             });
