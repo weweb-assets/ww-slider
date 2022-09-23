@@ -150,7 +150,7 @@ export default {
         }
     },
     created() {
-        this.uniqueID = wwLib.wwUtils.getUniqueId();
+        this.uniqueID = wwLib.wwUtils.getUid();
     },
     methods: {
         initSwiper() {
