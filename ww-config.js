@@ -1,25 +1,72 @@
+import { getContent } from './src/getContent.js';
+
 export default {
     editor: {
         label: {
             en: 'Slider',
         },
         icon: 'slider',
+        bubble: {
+            icon: 'slider',
+        },
+        customSettingsPropertiesOrder: [
+            ['mainLayoutContent', 'slideIndex'],
+            ['slidesPerView', 'spaceBetween', 'effect', 'transitionDuration'],
+        ],
     },
     properties: {
+        mainLayoutContent: {
+            label: {
+                en: 'Bind slides',
+            },
+            bindable: 'repeatable',
+            type: 'Info',
+            options: {
+                text: ' ',
+            },
+            section: 'settings',
+            defaultValue: [
+                { isWwObject: true, type: 'ww-flexbox' },
+                { isWwObject: true, type: 'ww-flexbox' },
+                { isWwObject: true, type: 'ww-flexbox' },
+            ],
+            navigator: {
+                group: 'Slides',
+            },
+            /* wwEditor:start */
+            bindingValidation: {
+                validations: [
+                    {
+                        type: 'array',
+                    },
+                    {
+                        type: 'object',
+                    },
+                ],
+                tooltip:
+                    'A collection or an array of data: \n\n`myCollection` or `[{}, {}, ...] || ["string1", "string2", ...] || [1, 2, ...]`',
+            },
+            /* wwEditor:end */
+        },
         slideIndex: {
             label: { en: 'Slides', fr: 'Slides' },
             type: 'Tabs',
             editorOnly: true,
-            options: content => ({
-                labels: content.slidesLayout.map(({ uid }) => ({
-                    type: 'element',
-                    uid,
-                })),
-                prefixLabel: 'Slide',
-                nbTabs: content.slidesLayout.length,
-                add: 'addSlide',
-                remove: 'removeSlide',
-            }),
+            options: (content, _, boundProps) => {
+                const isBound = !!boundProps.mainLayoutContent;
+                const _content = getContent(content.mainLayoutContent);
+
+                return {
+                    labels: _content.map((_, index) => ({
+                        label: `slide ${index + 1}`,
+                    })),
+                    prefixLabel: 'Slide',
+                    nbTabs: _content.length,
+                    add: 'addSlide',
+                    remove: 'removeSlide',
+                    bound: isBound,
+                };
+            },
             section: 'settings',
             defaultValue: 0,
         },
@@ -31,7 +78,7 @@ export default {
             },
             options: content => ({
                 min: 1,
-                max: content.slidesLayout.length,
+                max: getContent(content.mainLayoutContent).length,
                 step: 1,
             }),
             responsive: true,
@@ -61,6 +108,9 @@ export default {
                 options: [
                     { value: 'slide', label: { en: 'slide' } },
                     { value: 'fade', label: { en: 'fade' } },
+                    { value: 'coverflow', label: { en: 'coverflow' } },
+                    { value: 'flip', label: { en: 'flip' } },
+                    { value: 'cards', label: { en: 'cards' } },
                 ],
             },
             defaultValue: 'slide',
@@ -73,7 +123,7 @@ export default {
                 fr: 'Transition duration',
             },
             options: {
-                unitChoices: [{ value: 'ms', label: 'ms', min: 1, max: 5000 }],
+                unitChoices: [{ value: 'ms', label: 'ms', min: 1, max: 20000 }],
             },
             section: 'settings',
             defaultValue: '400ms',
@@ -93,7 +143,7 @@ export default {
                 en: 'Pagination',
                 fr: 'Pagination',
             },
-            defaultValue: true,
+            defaultValue: false,
             section: 'settings',
         },
         loop: {
@@ -108,8 +158,8 @@ export default {
         automatic: {
             type: 'OnOff',
             label: {
-                en: 'Automatic',
-                fr: 'Automatic',
+                en: 'Autoplay',
+                fr: 'Autoplay',
             },
             defaultValue: false,
             section: 'settings',
@@ -137,15 +187,7 @@ export default {
             defaultValue: false,
             section: 'settings',
         },
-        slidesLayout: {
-            hidden: true,
-            defaultValue: [[], [], []],
-        },
-        bulletsLayout: {
-            hidden: true,
-            defaultValue: [],
-        },
-        bulletsLayoutStates: {
+        slidesContainer: {
             hidden: true,
             defaultValue: [],
         },
