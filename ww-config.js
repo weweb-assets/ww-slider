@@ -4,6 +4,7 @@ export default {
             en: 'Slider',
         },
         icon: 'slider',
+        deprecated: 'Use a slider from the Elements panel instead of this one.',
     },
     properties: {
         slideIndex: {
