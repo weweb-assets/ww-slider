@@ -19,6 +19,6 @@
     },
     "license": "MIT",
     "dependencies": {
-        "swiper": "^7.3.1"
+        "swiper": "7.3.1"
     }
 }
