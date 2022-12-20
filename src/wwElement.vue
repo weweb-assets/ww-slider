@@ -151,8 +151,8 @@ export default {
                 allowTouchMove: !this.isEditing,
 
                 on: {
-                    realIndexChange: () => {
-                        this.sliderIndex = this.swiperInstance.realIndex;
+                    realIndexChange: e => {
+                        this.sliderIndex = e.realIndex;
                     },
                 },
             };
@@ -204,24 +204,28 @@ export default {
             // Prevents multiple initializations that can lead to autoplay or loop bugs
             if (this.isInit) return;
             this.isInit = true;
+            try {
+                if (this.swiperInstance && this.swiperInstance.destroy) this.swiperInstance.destroy(true, true);
 
-            if (this.swiperInstance && this.swiperInstance.destroy) this.swiperInstance.destroy(true, true);
+                // Necessary to clean the possible persistent style in the element before a new initialization
+                this.componentKey += 1;
 
-            // Necessary to clean the possible persistent style in the element before a new initialization
-            this.componentKey += 1;
+                // Necessary to make the loop mode work properly with wwElements
+                await nextTick();
+                await nextTick();
 
-            // Necessary to make the loop mode work properly with wwElements
-            await nextTick();
-            await nextTick();
+                this.swiperInstance = new Swiper(this.$refs.swiper, this.swiperOptions);
+                this.sliderIndex = this.swiperInstance.realIndex;
 
-            this.swiperInstance = new Swiper(this.$refs.swiper, this.swiperOptions);
-            this.sliderIndex = this.swiperInstance.realIndex;
+                if (resetIndex) this.slideTo(0);
 
-            if (resetIndex) this.slideTo(0);
-
-            // Ensures that autoplay does not continue when editing
-            this.handleAutoplay();
-            this.isInit = false;
+                // Ensures that autoplay does not continue when editing
+                this.handleAutoplay();
+            } catch (error) {
+                wwLib.wwLog.warn('WW-SLIDER SWIPER INIT ERROR', error);
+            } finally {
+                this.isInit = false;
+            }
         },
         /* wwEditor:start */
         async addSlide() {
