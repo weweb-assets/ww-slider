@@ -149,6 +149,7 @@ export default {
                 loop: this.content.loop,
                 freeMode: this.content.linearTransition,
                 allowTouchMove: !this.isEditing,
+                touchStartPreventDefault: false,
 
                 on: {
                     realIndexChange: e => {
