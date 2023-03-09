@@ -64,7 +64,7 @@ export default {
                     nbTabs: _content.length,
                     add: 'addSlide',
                     remove: 'removeSlide',
-                    bound: isBound,
+                    fixed: isBound,
                 };
             },
             section: 'settings',
