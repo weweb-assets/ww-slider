@@ -105,7 +105,7 @@ export default {
             return this.content.navigation && hasPrevious;
         },
         showRightNav() {
-            const hasNext = this.sliderIndex < this.nbOfSlides - 1 || this.content.loop;
+            const hasNext = this.sliderIndex + this.slidesPerView - 1 < this.nbOfSlides - 1 || this.content.loop;
             return this.content.navigation && hasNext;
         },
         numberOfBullets() {
