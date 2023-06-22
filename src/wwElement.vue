@@ -51,12 +51,12 @@
 import { nextTick } from 'vue';
 
 import Swiper, { EffectFlip, EffectFade, EffectCoverflow, EffectCube, EffectCards, Autoplay } from 'swiper';
-import 'swiper/swiper.min.css';
-import 'swiper/modules/effect-fade/effect-fade.min.css';
-import 'swiper/modules/effect-coverflow/effect-coverflow.min.css';
-import 'swiper/modules/effect-cards/effect-cards.min.css';
-import 'swiper/modules/effect-flip/effect-flip.min.css';
-import 'swiper/modules/effect-cube/effect-cube.min.css';
+import 'swiper/css';
+import 'swiper/css/effect-fade';
+import 'swiper/css/effect-coverflow';
+import 'swiper/css/effect-cards';
+import 'swiper/css/effect-flip';
+import 'swiper/css/effect-cube';
 
 import { getContent } from './getContent.js';
 
@@ -105,7 +105,7 @@ export default {
             return this.content.navigation && hasPrevious;
         },
         showRightNav() {
-            const hasNext = this.sliderIndex < this.nbOfSlides - 1 || this.content.loop;
+            const hasNext = this.sliderIndex + this.slidesPerView - 1 < this.nbOfSlides - 1 || this.content.loop;
             return this.content.navigation && hasNext;
         },
         numberOfBullets() {
