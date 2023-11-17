@@ -70,11 +70,15 @@ export default {
     },
     emits: ['update:content', 'update:sidepanel-content'],
     setup() {
+        /* wwEditor:start */
         const { createElement, cloneElement  } = wwLib.useCreateElement();
+        /* wwEditor:end */
 
         return {
+            /* wwEditor:start */
             createElement,
             cloneElement, 
+            /* wwEditor:end */
             swiperInstance: null,
         };
     },
