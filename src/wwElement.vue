@@ -70,7 +70,15 @@ export default {
     },
     emits: ['update:content', 'update:sidepanel-content'],
     setup() {
+        /* wwEditor:start */
+        const { createElement, cloneElement  } = wwLib.useCreateElement();
+        /* wwEditor:end */
+
         return {
+            /* wwEditor:start */
+            createElement,
+            cloneElement, 
+            /* wwEditor:end */
             swiperInstance: null,
         };
     },
@@ -112,7 +120,7 @@ export default {
             return Math.ceil(this.nbOfSlides - this.slidesPerView + 1);
         },
         transitionDuration() {
-            let value = this.content.transitionDuration;
+            let value = this.content.transitionDuration || '0s';
             value = value.substring(0, value.length - 2);
             return parseInt(value);
         },
@@ -145,7 +153,7 @@ export default {
                 coverflowEffect: { slideShadows: false },
                 slidesPerView: this.slidesPerView,
                 speed: this.transitionDuration,
-                spaceBetween: parseInt(this.content.spaceBetween.slice(0, -2)),
+                spaceBetween: parseInt(this.content.spaceBetween ? this.content.spaceBetween.slice(0, -2) : '0'),
                 loop: this.content.loop,
                 freeMode: this.content.linearTransition,
                 allowTouchMove: !this.isEditing,
@@ -233,14 +241,11 @@ export default {
             const mainLayoutContent = [...this.content.mainLayoutContent];
 
             if (mainLayoutContent.length === 0) {
-                const slide = await wwLib.createElement('ww-flexbox', {}, {}, this.wwFrontState.sectionId);
+                const slide = await this.createElement('ww-flexbox');
                 mainLayoutContent.push(slide);
             } else {
-                const slide = await wwLib.wwObjectHelper.cloneElement(
-                    mainLayoutContent[mainLayoutContent.length - 1].uid,
-                    this.wwFrontState.sectionId
-                );
-                mainLayoutContent.push(slide);
+                const { uid } = await this.cloneElement( mainLayoutContent[mainLayoutContent.length - 1].uid );
+                mainLayoutContent.push(uid);
             }
             this.$emit('update:content', { mainLayoutContent });
         },
