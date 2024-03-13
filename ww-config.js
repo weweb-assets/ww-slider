@@ -12,6 +12,13 @@ export default {
         customSettingsPropertiesOrder: [
             ['mainLayoutContent', 'slideIndex'],
             ['slidesPerView', 'spaceBetween', 'effect', 'transitionDuration'],
+            'navigation',
+            'pagination',
+            'loop',
+            'automatic',
+            ['automaticTiming', 'linearTransition'],
+            'mousewheel',
+            ['mousewheelForceToAxis', 'mousewheelInvert', 'mousewheelSensitivity'],
         ],
     },
     properties: {
@@ -196,6 +203,45 @@ export default {
                 fr: 'Linear transition',
             },
             defaultValue: false,
+            section: 'settings',
+        },
+        mousewheel: {
+            type: 'OnOff',
+            label: {
+                en: 'Mousewheel control',
+                fr: 'Mousewheel control',
+            },
+            defaultValue: false,
+            section: 'settings',
+        },
+        mousewheelForceToAxis: {
+            hidden: content => !content.mousewheel,
+            type: 'OnOff',
+            label: {
+                en: 'Force to axis',
+                fr: 'Force to axis',
+            },
+            defaultValue: false,
+            section: 'settings',
+        },
+        mousewheelInvert: {
+            hidden: content => !content.mousewheel,
+            type: 'OnOff',
+            label: {
+                en: 'Invert direction',
+                fr: 'Invert direction',
+            },
+            defaultValue: false,
+            section: 'settings',
+        },
+        mousewheelSensitivity: {
+            hidden: content => !content.mousewheel,
+            type: 'Number',
+            label: {
+                en: 'Sensitivity',
+                fr: 'Sensitivity',
+            },
+            defaultValue: 1,
             section: 'settings',
         },
         slidesContainer: {
