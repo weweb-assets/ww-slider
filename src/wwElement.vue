@@ -150,7 +150,7 @@ export default {
                 mousewheel: {
                     forceToAxis: this.content.mousewheelForceToAxis,
                     invert: this.content.mousewheelInvert,
-                    sensitivity: this.content.mousewheelSensitivity,
+                    sensitivity: this.content.mousewheelSensitivity || 1,
                 },
             };
 
