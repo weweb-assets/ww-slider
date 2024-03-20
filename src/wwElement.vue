@@ -50,7 +50,7 @@
 <script>
 import { nextTick } from 'vue';
 
-import Swiper, { EffectFlip, EffectFade, EffectCoverflow, EffectCube, EffectCards, Autoplay } from 'swiper';
+import Swiper, { EffectFlip, EffectFade, EffectCoverflow, EffectCube, EffectCards, Autoplay, Mousewheel } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/effect-fade';
 import 'swiper/css/effect-coverflow';
@@ -71,13 +71,13 @@ export default {
     emits: ['update:content', 'update:sidepanel-content'],
     setup() {
         /* wwEditor:start */
-        const { createElement, cloneElement  } = wwLib.useCreateElement();
+        const { createElement, cloneElement } = wwLib.useCreateElement();
         /* wwEditor:end */
 
         return {
             /* wwEditor:start */
             createElement,
-            cloneElement, 
+            cloneElement,
             /* wwEditor:end */
             swiperInstance: null,
         };
@@ -146,8 +146,16 @@ export default {
                 },
             };
 
+            const mousewheel = {
+                mousewheel: {
+                    forceToAxis: this.content.mousewheelForceToAxis,
+                    invert: this.content.mousewheelInvert,
+                    sensitivity: this.content.mousewheelSensitivity || 1,
+                },
+            };
+
             const options = {
-                modules: [EffectFlip, EffectFade, EffectCoverflow, EffectCube, EffectCards, Autoplay],
+                modules: [EffectFlip, EffectFade, EffectCoverflow, EffectCube, EffectCards, Autoplay, Mousewheel],
                 effect: this.content.effect,
                 cardsEffect: { slideShadows: false },
                 coverflowEffect: { slideShadows: false },
@@ -166,7 +174,11 @@ export default {
                 },
             };
 
-            return this.content.automatic ? { ...options, ...autoplay } : { ...options };
+            return {
+                ...options,
+                ...(this.content.automatic ? autoplay : {}),
+                ...(this.content.mousewheel ? mousewheel : {}),
+            };
         },
         cssVariables() {
             return {
@@ -244,7 +256,7 @@ export default {
                 const slide = await this.createElement('ww-flexbox');
                 mainLayoutContent.push(slide);
             } else {
-                const { uid } = await this.cloneElement( mainLayoutContent[mainLayoutContent.length - 1].uid );
+                const { uid } = await this.cloneElement(mainLayoutContent[mainLayoutContent.length - 1].uid);
                 mainLayoutContent.push(uid);
             }
             this.$emit('update:content', { mainLayoutContent });
