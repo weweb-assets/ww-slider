@@ -71,7 +71,7 @@ export default {
     emits: ['update:content', 'update:sidepanel-content'],
     setup() {
         /* wwEditor:start */
-        const { createElement, cloneElement } = wwLib.useCreateElement();
+        const { createElement, cloneElement } = wwLib.wwElement.useCreate();
         /* wwEditor:end */
 
         return {
