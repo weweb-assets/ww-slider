@@ -130,12 +130,20 @@ export default {
             return parseInt(value);
         },
         slidesPerView() {
-            if (this.content.slidesPerView > this.nbOfSlides) {
+            let slidePerView = this.content.slidesPerView;
+            if(typeof slidePerView === 'string') {
+                slidePerView = parseInt(slidePerView);
+            }
+            if(!slidePerView || isNaN(slidePerView)) {
+                slidePerView = 1;
+            }
+
+            if (slidePerView > this.nbOfSlides) {
                 return this.nbOfSlides;
-            } else if (this.content.slidesPerView < 1) {
+            } else if (slidePerView < 1) {
                 return 1;
             } else {
-                return this.content.slidesPerView;
+                return slidePerView;
             }
         },
         swiperOptions() {
