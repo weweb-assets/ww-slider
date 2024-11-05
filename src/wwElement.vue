@@ -193,6 +193,9 @@ export default {
                 '--timing-function': this.content.linearTransition ? 'linear' : 'auto',
             };
         },
+        currentScreenSize() {
+            return wwLib.globalContext.browser.breakpoint;
+        },
     },
     watch: {
         /* wwEditor:start */
@@ -220,6 +223,9 @@ export default {
         /* wwEditor:end */
         'content.mainLayoutContent'() {
             this.initSwiper(true);
+        },
+        currentScreenSize() {
+            this.initSwiper();
         },
     },
     mounted() {
