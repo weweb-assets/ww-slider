@@ -1,6 +1,6 @@
 ---
 name: ww-slider
-description: The ww-slider component creates customizable carousels/sliders with multiple slides, offering transition effects, navigation, pagination controls, and Swiper library integration.
+description: The ww-slider element creates customizable carousels/sliders with multiple slides, offering transition effects, navigation, pagination controls, and Swiper library integration.
 keywords:
   - carousel
   - slider
@@ -10,16 +10,16 @@ keywords:
   - navigation arrows
   - swiper integration
   - mousewheel control
-  - slide components
+  - slide elements
   - loop functionality
 ---
 
 #### ww-slider
 
-Component Purpose: Creates carousel/slider with multiple slides, providing effects, transitions, navigation and pagination controls.
+Element Purpose: Creates carousel/slider with multiple slides, providing effects, transitions, navigation and pagination controls.
 
 Properties:
-- mainLayoutContent: Array(object)|object - Array of slide components or data collection
+- mainLayoutContent: Array(object)|object - Array of slide elements or data collection
 - slidesPerView: number - Number of slides to display (default: 1)
 - spaceBetween: string - Space between slides (default: "")
 - effect: 'slide'|'fade'|'coverflow'|'flip'|'cards' - Transition effect (default: "slide")
@@ -36,9 +36,9 @@ Properties:
 - mousewheelSensitivity: number - Mousewheel sensitivity (default: 1)
 
 Children:
-- mainLayoutContent: Array(any) - Slide components
-- navigationIcons: Array(Component(ww-icon)) - Previous/next navigation icons
-- bulletsIcons: Component(ww-icon) - Pagination bullet icons
+- mainLayoutContent: Array(any) - Slide elements
+- navigationIcons: Array(Element(ww-icon)) - Previous/next navigation icons
+- bulletsIcons: Element(ww-icon) - Pagination bullet icons
 
 Example:
 {"tag":"ww-slider","name":"Content Slider","props":{"default":{"loop":false,"effect":"slide"},"automatic":false,"navigation":true,"pagination":true,"spaceBetween":"0px","slidesPerView":1},"styles":{"default":{"width":"100%","height":"auto"}},"children":{"bulletsIcons":{"tag":"ww-icon","props":{"default":{"icon":"fas fa-circle"}}},"navigationIcons":[{"tag":"ww-icon","props":{"default":{"icon":"fas fa-chevron-left"}}},{"tag":"ww-icon","props":{"default":{"icon":"fas fa-chevron-right"}}}],"mainLayoutContent":[{"tag":"ww-flexbox","children":{"children":[{"tag":"ww-text","props":{"default":{"text":{"en":"<div>Slide 1</div>"}}}}]}}]}}
@@ -46,3 +46,5 @@ Example:
 Events: none
 
 Variables: none
+
+**CRITICAL** If ww-slider is a (sub)children of a ww-flexbox grid, set to the DIRECT CHILDREN OF THE GRID 'overflow hidden' style. Pattern to apply : ... > ww-flexbox (grid) > ww-flexbox (**set overflow hidden**) > ... > ww-slider

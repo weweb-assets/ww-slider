@@ -418,9 +418,11 @@ export default {
     z-index: 2;
 
     &.prev {
+        width: auto;
         left: 0;
     }
     &.next {
+        width: auto;
         right: 0;
     }
 }

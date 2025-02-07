@@ -24,16 +24,15 @@ export default {
     properties: {
         mainLayoutContent: {
             label: {
-                en: 'Bind slides',
+                en: 'Slides',
             },
             bindable: 'repeatable',
-            type: 'Info',
+            type: 'Repeat',
             options: {
                 text: ' ',
             },
             section: 'settings',
             defaultValue: [
-                { isWwObject: true, type: 'ww-flexbox' },
                 { isWwObject: true, type: 'ww-flexbox' },
                 { isWwObject: true, type: 'ww-flexbox' },
             ],
