@@ -251,13 +251,13 @@ export default {
         navigationIcons: {
             hidden: true,
             defaultValue: [
-                { isWwObject: true, type: 'ww-icon' },
-                { isWwObject: true, type: 'ww-icon' },
+                { isWwObject: true, type: '83d890fb-84f9-4386-b459-fb4be89a8e15' },
+                { isWwObject: true, type: '83d890fb-84f9-4386-b459-fb4be89a8e15' },
             ],
         },
         bulletsIcons: {
             hidden: true,
-            defaultValue: { isWwObject: true, type: 'ww-icon' },
+            defaultValue: { isWwObject: true, type: '83d890fb-84f9-4386-b459-fb4be89a8e15' },
         },
     },
 };
