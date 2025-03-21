@@ -26,11 +26,16 @@
                 class="bullet-container"
                 @click="onBulletClick(index - 1)"
             >
-                <wwElement
-                    class="bulletIcon"
-                    v-bind="content.bulletsIcons"
-                    :states="index - 1 === sliderIndex ? ['active', 'Current Slide'] : []"
-                />
+                <wwLocalContext
+                    :data="{ currentBulletIndex: index, isCurrent: index - 1 === sliderIndex }"
+                    elementKey="bullet"
+                >
+                    <wwElement
+                        class="bulletIcon"
+                        v-bind="content.bulletsIcons"
+                        :states="index - 1 === sliderIndex ? ['active', 'Current Slide'] : []"
+                    />
+                </wwLocalContext>
             </div>
         </div>
 
