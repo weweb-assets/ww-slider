@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { nextTick } from 'vue';
+import { nextTick, ref, computed, watch, onMounted, onBeforeUnmount } from 'vue';
 
 import Swiper, { EffectFlip, EffectFade, EffectCoverflow, EffectCube, EffectCards, Autoplay, Mousewheel } from 'swiper';
 import 'swiper/css';
@@ -69,68 +69,40 @@ export default {
         /* wwEditor:end */
     },
     emits: ['update:content', 'update:sidepanel-content'],
-    setup() {
+    setup(props, { emit }) {
         /* wwEditor:start */
         const { createElement, cloneElement } = wwLib.useCreateElement();
         /* wwEditor:end */
 
-        return {
+        const swiper = ref(null);
+        const swiperInstance = ref(null);
+        const sliderIndex = ref(0);
+        const componentKey = ref(0);
+        const isInit = ref(false);
+
+        const isEditing = computed(() => {
             /* wwEditor:start */
-            createElement,
-            cloneElement,
-            /* wwEditor:end */
-            swiperInstance: null,
-        };
-    },
-    data() {
-        return {
-            sliderIndex: 0,
-            componentKey: 0,
-            isInit: false,
-        };
-    },
-    computed: {
-        isEditing() {
-            /* wwEditor:start */
-            return this.wwEditorState.editMode === wwLib.wwEditorHelper.EDIT_MODES.EDITION;
+            return props.wwEditorState.editMode === wwLib.wwEditorHelper.EDIT_MODES.EDITION;
             /* wwEditor:end */
             // eslint-disable-next-line no-unreachable
             return false;
-        },
-        isSelected() {
+        });
+
+        const isSelected = computed(() => {
             /* wwEditor:start */
-            return this.wwEditorState.isSelected;
+            return props.wwEditorState.isSelected;
             /* wwEditor:end */
             // eslint-disable-next-line no-unreachable
             return false;
-        },
-        nbOfSlides() {
-            const content = getContent(this.content.mainLayoutContent);
+        });
+
+        const nbOfSlides = computed(() => {
+            const content = getContent(props.content.mainLayoutContent);
             return content.length;
-        },
-        showLeftNav() {
-            const hasPrevious = this.sliderIndex > 0 || this.content.loop;
-            return this.content.navigation && hasPrevious;
-        },
-        showRightNav() {
-            const hasNext = this.sliderIndex + this.slidesPerView - 1 < this.nbOfSlides - 1 || this.content.loop;
-            return this.content.navigation && hasNext;
-        },
-        numberOfBullets() {
-            return Math.ceil(this.nbOfSlides - this.slidesPerView + 1);
-        },
-        transitionDuration() {
-            let value = this.content.transitionDuration || '0s';
-            value = value.substring(0, value.length - 2);
-            return parseInt(value);
-        },
-        automaticTiming() {
-            let value = this.content.automaticTiming;
-            value = value.substring(0, value.length - 1);
-            return parseInt(value);
-        },
-        slidesPerView() {
-            let slidePerView = this.content.slidesPerView;
+        });
+
+        const slidesPerView = computed(() => {
+            let slidePerView = props.content.slidesPerView;
             if(typeof slidePerView === 'string') {
                 slidePerView = parseInt(slidePerView);
             }
@@ -138,186 +110,247 @@ export default {
                 slidePerView = 1;
             }
 
-            if (slidePerView > this.nbOfSlides) {
-                return this.nbOfSlides;
+            if (slidePerView > nbOfSlides.value) {
+                return nbOfSlides.value;
             } else if (slidePerView < 1) {
                 return 1;
             } else {
                 return slidePerView;
             }
-        },
-        swiperOptions() {
+        });
+
+        const showLeftNav = computed(() => {
+            const hasPrevious = sliderIndex.value > 0 || props.content.loop;
+            return props.content.navigation && hasPrevious;
+        });
+
+        const showRightNav = computed(() => {
+            const hasNext = sliderIndex.value + slidesPerView.value - 1 < nbOfSlides.value - 1 || props.content.loop;
+            return props.content.navigation && hasNext;
+        });
+
+        const numberOfBullets = computed(() => {
+            return Math.ceil(nbOfSlides.value - slidesPerView.value + 1);
+        });
+
+        const transitionDuration = computed(() => {
+            let value = props.content.transitionDuration || '0s';
+            value = value.substring(0, value.length - 2);
+            return parseInt(value);
+        });
+
+        const automaticTiming = computed(() => {
+            let value = props.content.automaticTiming;
+            value = value.substring(0, value.length - 1);
+            return parseInt(value);
+        });
+
+        const swiperOptions = computed(() => {
             const autoplay = {
                 autoplay: {
-                    delay: this.automaticTiming * 1000,
+                    delay: automaticTiming.value * 1000,
                     disableOnInteraction: false,
                 },
             };
 
             const mousewheel = {
                 mousewheel: {
-                    forceToAxis: this.content.mousewheelForceToAxis,
-                    invert: this.content.mousewheelInvert,
-                    sensitivity: this.content.mousewheelSensitivity || 1,
+                    forceToAxis: props.content.mousewheelForceToAxis,
+                    invert: props.content.mousewheelInvert,
+                    sensitivity: props.content.mousewheelSensitivity || 1,
                 },
             };
 
             const options = {
                 modules: [EffectFlip, EffectFade, EffectCoverflow, EffectCube, EffectCards, Autoplay, Mousewheel],
-                effect: this.content.effect,
+                effect: props.content.effect,
                 cardsEffect: { slideShadows: false },
                 coverflowEffect: { slideShadows: false },
-                slidesPerView: this.slidesPerView,
-                speed: this.transitionDuration,
-                spaceBetween: parseInt(this.content.spaceBetween ? this.content.spaceBetween.slice(0, -2) : '0'),
-                loop: this.content.loop,
-                freeMode: this.content.linearTransition,
-                allowTouchMove: !this.isEditing,
+                slidesPerView: slidesPerView.value,
+                speed: transitionDuration.value,
+                spaceBetween: parseInt(props.content.spaceBetween ? props.content.spaceBetween.slice(0, -2) : '0'),
+                loop: props.content.loop,
+                freeMode: props.content.linearTransition,
+                allowTouchMove: !isEditing.value,
                 touchStartPreventDefault: false,
 
                 on: {
                     realIndexChange: e => {
-                        this.sliderIndex = e.realIndex;
+                        sliderIndex.value = e.realIndex;
                     },
                 },
             };
 
             return {
                 ...options,
-                ...(this.content.automatic ? autoplay : {}),
-                ...(this.content.mousewheel ? mousewheel : {}),
+                ...(props.content.automatic ? autoplay : {}),
+                ...(props.content.mousewheel ? mousewheel : {}),
             };
-        },
-        cssVariables() {
+        });
+
+        const cssVariables = computed(() => {
             return {
-                '--timing-function': this.content.linearTransition ? 'linear' : 'auto',
+                '--timing-function': props.content.linearTransition ? 'linear' : 'auto',
             };
-        },
-        currentScreenSize() {
+        });
+
+        const currentScreenSize = computed(() => {
             return wwLib.globalContext.browser.breakpoint;
-        },
-    },
-    watch: {
-        /* wwEditor:start */
-        isEditing() {
-            this.initSwiper();
-        },
-        'wwEditorState.sidepanelContent.slideIndex'(index) {
-            if (!this.isEditing) return;
-            if (this.sliderIndex !== index) {
-                this.slideTo(index);
+        });
+
+        const slideTo = (index) => {
+            /* slideToLoop instead of slideTo allows to always rely on the realIndex,
+            and thus to keep the right index even when the loop mode is activated */
+            if (swiperInstance.value) swiperInstance.value.slideToLoop(index, transitionDuration.value);
+        };
+
+        const onBulletClick = (index) => {
+            if (isEditing.value) return;
+            slideTo(index);
+        };
+
+        const slideNext = () => {
+            if (isEditing.value) return;
+            if (swiperInstance.value) swiperInstance.value.slideNext(transitionDuration.value);
+        };
+
+        const slidePrev = () => {
+            if (isEditing.value) return;
+            if (swiperInstance.value) swiperInstance.value.slidePrev(transitionDuration.value);
+        };
+
+        const handleAutoplay = () => {
+            if (
+                isEditing.value &&
+                props.content.automatic &&
+                swiperInstance.value &&
+                swiperInstance.value.autoplay &&
+                swiperInstance.value.autoplay.running
+            ) {
+                swiperInstance.value.autoplay.stop();
+            } else if (
+                !isEditing.value &&
+                props.content.automatic &&
+                swiperInstance.value &&
+                swiperInstance.value.autoplay &&
+                swiperInstance.value.autoplay.running
+            ) {
+                swiperInstance.value.autoplay.start();
             }
-        },
-        sliderIndex(index) {
-            if (!this.isEditing) return;
-            if (this.wwEditorState.sidepanelContent.slideIndex !== index) {
-                this.$emit('update:sidepanel-content', {
-                    path: 'slideIndex',
-                    value: index,
-                });
-            }
-        },
-        swiperOptions() {
-            this.initSwiper();
-        },
-        /* wwEditor:end */
-        'content.mainLayoutContent'() {
-            this.initSwiper(true);
-        },
-        currentScreenSize() {
-            this.initSwiper();
-        },
-    },
-    mounted() {
-        this.initSwiper(false);
-    },
-    beforeUnmount() {
-        if (this.swiperInstance) this.swiperInstance.destroy(true, true);
-    },
-    methods: {
-        async initSwiper(resetIndex = true) {
+        };
+
+        const initSwiper = async (resetIndex = false) => {
             // Prevents multiple initializations that can lead to autoplay or loop bugs
-            if (this.isInit) return;
-            this.isInit = true;
+            if (isInit.value) return;
+            isInit.value = true;
             try {
-                if (this.swiperInstance && this.swiperInstance.destroy) this.swiperInstance.destroy(true, true);
+                if (swiperInstance.value && swiperInstance.value.destroy) swiperInstance.value.destroy(true, true);
 
                 // Necessary to clean the possible persistent style in the element before a new initialization
-                this.componentKey += 1;
+                componentKey.value += 1;
 
                 // Necessary to make the loop mode work properly with wwElements
                 await nextTick();
                 await nextTick();
 
-                this.swiperInstance = new Swiper(this.$refs.swiper, this.swiperOptions);
-                this.sliderIndex = this.swiperInstance.realIndex;
+                swiperInstance.value = new Swiper(swiper.value, swiperOptions.value);
+                sliderIndex.value = swiperInstance.value.realIndex;
 
-                if (resetIndex) this.slideTo(0);
+                if (resetIndex) slideTo(0);
 
                 // Ensures that autoplay does not continue when editing
-                this.handleAutoplay();
+                handleAutoplay();
             } catch (error) {
                 wwLib.wwLog.warn('WW-SLIDER SWIPER INIT ERROR', error);
             } finally {
-                this.isInit = false;
+                isInit.value = false;
             }
-        },
+        };
+
         /* wwEditor:start */
-        async addSlide() {
-            const mainLayoutContent = [...this.content.mainLayoutContent];
+        const addSlide = async () => {
+            const mainLayoutContent = [...props.content.mainLayoutContent];
 
             if (mainLayoutContent.length === 0) {
-                const slide = await this.createElement('ww-flexbox');
+                const slide = await createElement('ww-flexbox');
                 mainLayoutContent.push(slide);
             } else {
-                const { uid } = await this.cloneElement(mainLayoutContent[mainLayoutContent.length - 1].uid);
+                const { uid } = await cloneElement(mainLayoutContent[mainLayoutContent.length - 1].uid);
                 mainLayoutContent.push(uid);
             }
-            this.$emit('update:content', { mainLayoutContent });
-        },
-        removeSlide(index) {
-            const mainLayoutContent = [...this.content.mainLayoutContent];
+            emit('update:content', { mainLayoutContent });
+        };
+
+        const removeSlide = (index) => {
+            const mainLayoutContent = [...props.content.mainLayoutContent];
             mainLayoutContent.splice(index, 1);
 
-            this.$emit('update:content', { mainLayoutContent });
-        },
+            emit('update:content', { mainLayoutContent });
+        };
         /* wwEditor:end */
-        slideTo(index) {
-            /* slideToLoop instead of slideTo allows to always rely on the realIndex,
-            and thus to keep the right index even when the loop mode is activated */
-            if (this.swiperInstance) this.swiperInstance.slideToLoop(index, this.transitionDuration);
-        },
-        onBulletClick(index) {
-            if (this.isEditing) return;
-            this.slideTo(index);
-        },
-        slideNext() {
-            if (this.isEditing) return;
-            if (this.swiperInstance) this.swiperInstance.slideNext(this.transitionDuration);
-        },
-        slidePrev() {
-            if (this.isEditing) return;
-            if (this.swiperInstance) this.swiperInstance.slidePrev(this.transitionDuration);
-        },
-        handleAutoplay() {
-            if (
-                this.isEditing &&
-                this.content.automatic &&
-                this.swiperInstance &&
-                this.swiperInstance.autoplay &&
-                this.swiperInstance.autoplay.running
-            ) {
-                this.swiperInstance.autoplay.stop();
-            } else if (
-                !this.isEditing &&
-                this.content.automatic &&
-                this.swiperInstance &&
-                this.swiperInstance.autoplay &&
-                this.swiperInstance.autoplay.running
-            ) {
-                this.swiperInstance.autoplay.start();
+
+        /* wwEditor:start */
+        watch(() => isEditing.value, () => {
+            initSwiper();
+        });
+
+        watch(() => props.wwEditorState.sidepanelContent.slideIndex, (index) => {
+            if (!isEditing.value) return;
+            if (sliderIndex.value !== index) {
+                slideTo(index);
             }
-        },
+        });
+
+        watch(() => sliderIndex.value, (index) => {
+            if (!isEditing.value) return;
+            if (props.wwEditorState.sidepanelContent.slideIndex !== index) {
+                emit('update:sidepanel-content', {
+                    path: 'slideIndex',
+                    value: index,
+                });
+            }
+        });
+
+        watch(() => swiperOptions.value, () => {
+            initSwiper();
+        });
+        /* wwEditor:end */
+
+        watch(() => props.content.mainLayoutContent, () => {
+            initSwiper(true);
+        });
+
+        watch(() => currentScreenSize.value, () => {
+            initSwiper();
+        });
+
+        onMounted(() => {
+            initSwiper(false);
+        });
+
+        onBeforeUnmount(() => {
+            if (swiperInstance.value) swiperInstance.value.destroy(true, true);
+        });
+
+        return {
+            swiper,
+            sliderIndex,
+            componentKey,
+            isEditing,
+            isSelected,
+            showLeftNav,
+            showRightNav,
+            numberOfBullets,
+            cssVariables,
+            onBulletClick,
+            slideNext,
+            slidePrev,
+            swiperInstance,
+            /* wwEditor:start */
+            addSlide,
+            removeSlide,
+            /* wwEditor:end */
+        };
     },
 };
 </script>
