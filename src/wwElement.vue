@@ -103,10 +103,10 @@ export default {
 
         const slidesPerView = computed(() => {
             let slidePerView = props.content.slidesPerView;
-            if(typeof slidePerView === 'string') {
+            if (typeof slidePerView === 'string') {
                 slidePerView = parseInt(slidePerView);
             }
-            if(!slidePerView || isNaN(slidePerView)) {
+            if (!slidePerView || isNaN(slidePerView)) {
                 slidePerView = 1;
             }
 
@@ -198,13 +198,13 @@ export default {
             return wwLib.globalContext.browser.breakpoint;
         });
 
-        const slideTo = (index) => {
+        const slideTo = index => {
             /* slideToLoop instead of slideTo allows to always rely on the realIndex,
             and thus to keep the right index even when the loop mode is activated */
             if (swiperInstance.value) swiperInstance.value.slideToLoop(index, transitionDuration.value);
         };
 
-        const onBulletClick = (index) => {
+        const onBulletClick = index => {
             if (isEditing.value) return;
             slideTo(index);
         };
@@ -281,7 +281,7 @@ export default {
             emit('update:content', { mainLayoutContent });
         };
 
-        const removeSlide = (index) => {
+        const removeSlide = index => {
             const mainLayoutContent = [...props.content.mainLayoutContent];
             mainLayoutContent.splice(index, 1);
 
@@ -290,39 +290,57 @@ export default {
         /* wwEditor:end */
 
         /* wwEditor:start */
-        watch(() => isEditing.value, () => {
-            initSwiper();
-        });
-
-        watch(() => props.wwEditorState.sidepanelContent.slideIndex, (index) => {
-            if (!isEditing.value) return;
-            if (sliderIndex.value !== index) {
-                slideTo(index);
+        watch(
+            () => isEditing.value,
+            () => {
+                initSwiper();
             }
-        });
+        );
 
-        watch(() => sliderIndex.value, (index) => {
-            if (!isEditing.value) return;
-            if (props.wwEditorState.sidepanelContent.slideIndex !== index) {
-                emit('update:sidepanel-content', {
-                    path: 'slideIndex',
-                    value: index,
-                });
+        watch(
+            () => props.wwEditorState.sidepanelContent.slideIndex,
+            index => {
+                if (!isEditing.value) return;
+                if (sliderIndex.value !== index) {
+                    slideTo(index);
+                }
             }
-        });
+        );
 
-        watch(() => swiperOptions.value, () => {
-            initSwiper();
-        });
+        watch(
+            () => sliderIndex.value,
+            index => {
+                if (!isEditing.value) return;
+                if (props.wwEditorState.sidepanelContent.slideIndex !== index) {
+                    emit('update:sidepanel-content', {
+                        path: 'slideIndex',
+                        value: index,
+                    });
+                }
+            }
+        );
+
+        watch(
+            () => swiperOptions.value,
+            () => {
+                initSwiper();
+            }
+        );
         /* wwEditor:end */
 
-        watch(() => props.content.mainLayoutContent, () => {
-            initSwiper(true);
-        });
+        watch(
+            () => props.content.mainLayoutContent,
+            () => {
+                initSwiper(true);
+            }
+        );
 
-        watch(() => currentScreenSize.value, () => {
-            initSwiper();
-        });
+        watch(
+            () => currentScreenSize.value,
+            () => {
+                initSwiper();
+            }
+        );
 
         onMounted(() => {
             initSwiper(false);
@@ -331,6 +349,51 @@ export default {
         onBeforeUnmount(() => {
             if (swiperInstance.value) swiperInstance.value.destroy(true, true);
         });
+
+        wwLib.wwElement.useRegisterElementLocalContext(
+            'slider',
+            {
+                // Put all data / computed in there
+                sliderIndex,
+                nbOfSlides,
+                slidesPerView,
+                showLeftNav,
+                showRightNav,
+                numberOfBullets,
+            },
+            {
+                slideTo: {
+                    method: slideTo,
+                    editor: {
+                        label: 'Slide to',
+                        elementName: 'Slider',
+                        description: 'Slide to a specific slide index.',
+                        args: [
+                            {
+                                name: 'Index',
+                                type: 'number',
+                            },
+                        ],
+                    },
+                },
+                slideNext: {
+                    method: slideNext,
+                    editor: {
+                        label: 'Slide Next',
+                        elementName: 'Slider',
+                        description: 'Slide to the next slide.',
+                    },
+                },
+                slidePrev: {
+                    method: slidePrev,
+                    editor: {
+                        label: 'Slide Prev',
+                        elementName: 'Slider',
+                        description: 'Slide to the previous slide.',
+                    },
+                },
+            }
+        );
 
         return {
             swiper,
