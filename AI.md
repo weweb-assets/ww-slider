@@ -22,12 +22,12 @@ Properties:
 - slidesPerView: number - Number of slides to display (default: 1)
 - spaceBetween: string - Space between slides (default: "")
 - effect: 'slide'|'fade'|'coverflow'|'flip'|'cards' - Transition effect (default: "slide")
-- transitionDuration: string - Transition duration (default: "0ms")
+- transitionDuration: string - Transition duration in milliseconds (default: "0ms").
 - navigation: boolean - Show navigation arrows (default: true)
 - pagination: boolean - Show pagination bullets (default: false)
 - loop: boolean - Loop slides infinitely (default: false)
 - automatic: boolean - Autoplay slides (default: false)
-- automaticTiming: string - Autoplay timing (default: "3s")
+- automaticTiming: string - Autoplay timing in seconds (default: "3s").
 - linearTransition: boolean - Use linear transition (default: false)
 - mousewheel: boolean - Enable mousewheel control (default: false)
 - mousewheelForceToAxis: boolean - Force mousewheel to axis (default: false)
@@ -53,7 +53,7 @@ bullet only local context:
 
 Example:
 <elements>
-{"uid":0,"tag":"ww-slider","name":"Main Slider","props":{"default":{"loop":true,"effect":"coverflow","automatic":true,"mousewheel":true,"navigation":true,"pagination":true,"spaceBetween":"0px","slidesPerView":1,"automaticTiming":"5000ms","linearTransition":false,"mousewheelInvert":false,"transitionDuration":"800ms","mousewheelForceToAxis":false,"mousewheelSensitivity":1}},"styles":{"default":{"width":"100%","height":"600px"}},"children":{"bulletsIcons":{"uid":1},"navigationIcons":[{"uid":2},{"uid":3}],"mainLayoutContent":[{"uid":4},{"uid":10},{"uid":16},{"uid":22}]}}
+{"uid":0,"tag":"ww-slider","name":"Main Slider","props":{"default":{"loop":true,"effect":"coverflow","automatic":true,"mousewheel":true,"navigation":true,"pagination":true,"spaceBetween":"0px","slidesPerView":1,"automaticTiming":"5s","linearTransition":false,"mousewheelInvert":false,"transitionDuration":"800ms","mousewheelForceToAxis":false,"mousewheelSensitivity":1}},"styles":{"default":{"width":"100%","height":"600px"}},"children":{"bulletsIcons":{"uid":1},"navigationIcons":[{"uid":2},{"uid":3}],"mainLayoutContent":[{"uid":4},{"uid":10},{"uid":16},{"uid":22}]}}
 {"uid":1,"tag":"ww-icon","name":"Bullet Icon","props":{"default":{"icon":"lucide/circle","color":"#ffffff"}},"styles":{"default":{"opacity":"0.5","transform":"scale(0.8)","transition":"all 0.3s ease","borderRadius":"100%","backgroundColor":{"wwFormula":"context.local.data?.['bullet']?.['isCurrent']  ? 'white' : undefined"}}}}
 {"uid":2,"tag":"ww-icon","name":"Previous Arrow","states":[{"id":"_wwHover","label":"hover"}],"props":{"default":{"icon":"lucide/chevron-left","color":"#ffffff"}},"styles":{"default":{"cursor":"pointer","margin":"0 0 0 20px","opacity":"0.9","padding":"20px","transform":"translateX(20px)","transition":"all 0.4s cubic-bezier(0.4, 0, 0.2, 1)","borderRadius":"50%","backgroundColor":"rgba(0, 0, 0, 0.5)","backdropFilter":"blur(8px)"},"_wwHover_default":{"opacity":"1","transform":"translateX(0) scale(1.05)","backgroundColor":"rgba(0, 0, 0, 0.7)"}}}
 {"uid":3,"tag":"ww-icon","name":"Next Arrow","states":[{"id":"_wwHover","label":"hover"}],"props":{"default":{"icon":"lucide/chevron-right","color":"#ffffff"}},"styles":{"default":{"cursor":"pointer","margin":"0 20px 0 0","opacity":"0.9","padding":"20px","transform":"translateX(-20px)","transition":"all 0.4s cubic-bezier(0.4, 0, 0.2, 1)","borderRadius":"50%","backgroundColor":"rgba(0, 0, 0, 0.5)","backdropFilter":"blur(8px)"},"_wwHover_default":{"opacity":"1","transform":"translateX(0) scale(1.05)","backgroundColor":"rgba(0, 0, 0, 0.7)"}}}
