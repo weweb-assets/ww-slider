@@ -32,7 +32,12 @@
 // import Swiper JS
 import Swiper from 'swiper/bundle';
 // import Swiper styles
+/* wwFront:start */
 import 'swiper/css';
+/* wwFront:end */
+/* wwEditor:start */
+import 'swiper/swiper-bundle.css';
+/* wwEditor:end */
 
 export default {
     props: {
