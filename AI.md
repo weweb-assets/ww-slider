@@ -30,7 +30,9 @@ Creates carousel/slider with multiple slides, providing effects, transitions, na
 - navigationIcons: ww-icon[] - Array of 2 ww-icon that are the left and right icons. They are already centered verticaly in the slider. You can set them to absolute position and play with left or right to position them.
 - bulletsIcons: ww-icon - Single ww-icon that will be used as a bullet at the bottom of the slider.
 
-***Context data (only accessible to this element and its children): ***
+***Context data (only accessible to this element and its slots): ***
+WARNING: Context data cannot be accessed outside of the slider: this is a context local to the slider.
+DO NOT use this context outside of the slider and its slots.
 - context.local.data?.['slider']?.['sliderIndex'] - Current slide index
 - context.local.data?.['slider']?.['nbOfSlides'] - Total number of slides
 - context.local.data?.['slider']?.['slidesPerView'] - Number of slides visible at once
