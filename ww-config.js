@@ -257,6 +257,7 @@ export default {
         },
         bulletsIcons: {
             hidden: true,
+            isArray: false,
             defaultValue: { isWwObject: true, type: 'ww-icon' },
         },
     },
