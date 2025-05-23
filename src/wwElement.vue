@@ -64,6 +64,7 @@ import 'swiper/css/effect-flip';
 import 'swiper/css/effect-cube';
 
 import { getContent } from './getContent.js';
+import { useImageTracking } from './useImageTracking.js';
 
 export default {
     props: {
@@ -85,6 +86,7 @@ export default {
         const componentKey = ref(0);
         const isInit = ref(false);
 
+
         const isEditing = computed(() => {
             /* wwEditor:start */
             return props.wwEditorState.editMode === wwLib.wwEditorHelper.EDIT_MODES.EDITION;
@@ -105,6 +107,8 @@ export default {
             const content = getContent(props.content.mainLayoutContent);
             return content.length;
         });
+
+        const { slideImageStates, slideImageStatesWithAggregates, allImagesLoaded, initImageTracking } = useImageTracking(swiper, nbOfSlides);
 
         const slidesPerView = computed(() => {
             let slidePerView = props.content.slidesPerView;
@@ -337,6 +341,7 @@ export default {
             () => props.content.mainLayoutContent,
             () => {
                 initSwiper(true);
+                initImageTracking();
             }
         );
 
@@ -349,10 +354,35 @@ export default {
 
         onMounted(() => {
             initSwiper(false);
+            initImageTracking();
         });
 
         onBeforeUnmount(() => {
             if (swiperInstance.value) swiperInstance.value.destroy(true, true);
+        });
+
+        // Create component variables for external binding (accessible in WeWeb editor)
+        const slideImageStatesVariable = wwLib.wwVariable.useComponentVariable({
+            uid: props.content.uid || 'ww-slider',
+            name: 'slideImageStates',
+            defaultValue: slideImageStatesWithAggregates,
+            readonly: true
+        });
+
+        const allImagesLoadedVariable = wwLib.wwVariable.useComponentVariable({
+            uid: props.content.uid || 'ww-slider',
+            name: 'allImagesLoaded', 
+            defaultValue: allImagesLoaded,
+            readonly: true
+        });
+
+        // Watch and update component variables when states change
+        watch(slideImageStatesWithAggregates, (newValue) => {
+            slideImageStatesVariable.setValue(newValue);
+        });
+
+        watch(allImagesLoaded, (newValue) => {
+            allImagesLoadedVariable.setValue(newValue);
         });
 
         wwLib.wwElement.useRegisterElementLocalContext(
@@ -365,6 +395,8 @@ export default {
                 showLeftNav,
                 showRightNav,
                 numberOfBullets,
+                slideImageStates: slideImageStatesWithAggregates,
+                allImagesLoaded,
             },
             {
                 slideTo: {
