@@ -366,6 +366,7 @@ export default {
             uid: props.content.uid || 'ww-slider',
             name: 'slideImageStates',
             defaultValue: slideImageStatesWithAggregates,
+            type: 'any',
             readonly: true
         });
 
@@ -373,6 +374,7 @@ export default {
             uid: props.content.uid || 'ww-slider',
             name: 'allImagesLoaded', 
             defaultValue: allImagesLoaded,
+            type: 'boolean',
             readonly: true
         });
 
