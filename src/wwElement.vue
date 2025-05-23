@@ -363,14 +363,6 @@ export default {
         });
 
         // Create component variables for external binding (accessible in WeWeb editor)
-        console.log('🔧 [WW-SLIDER] Creating component variables with UID:', props.uid);
-        console.log('🔧 [WW-SLIDER] Component props:', {
-            uid: props.uid,
-            sectionId: props.content.sectionId,
-            isSelected: isSelected.value,
-            isEditing: isEditing.value
-        });
-        
         const slideImageStatesVariable = wwLib.wwVariable.useComponentVariable({
             uid: props.uid,
             name: 'slideImageStates',
@@ -378,7 +370,6 @@ export default {
             type: 'any',
             readonly: true
         });
-        console.log('✅ [WW-SLIDER] slideImageStatesVariable created:', slideImageStatesVariable);
 
         const allImagesLoadedVariable = wwLib.wwVariable.useComponentVariable({
             uid: props.uid,
@@ -387,16 +378,13 @@ export default {
             type: 'boolean',
             readonly: true
         });
-        console.log('✅ [WW-SLIDER] allImagesLoadedVariable created:', allImagesLoadedVariable);
 
         // Watch and update component variables when states change
         watch(slideImageStatesWithAggregates, (newValue) => {
-            console.log('📊 [WW-SLIDER] slideImageStatesWithAggregates changed:', newValue);
             slideImageStatesVariable.setValue(newValue);
         });
 
         watch(allImagesLoaded, (newValue) => {
-            console.log('📊 [WW-SLIDER] allImagesLoaded changed:', newValue);
             allImagesLoadedVariable.setValue(newValue);
         });
 
