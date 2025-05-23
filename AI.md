@@ -47,9 +47,15 @@ slider:
 - context.local.data?.['slider']?.['showLeftNav'] - Whether left navigation is visible
 - context.local.data?.['slider']?.['showRightNav'] - Whether right navigation is visible
 - context.local.data?.['slider']?.['numberOfBullets'] - Number of pagination bullets
+- context.local.data?.['slider']?.['slideImageStates'] - Object containing image loading states per slide with structure: slideImageStates[slideIndex] = { images: { [imageIndex]: { isLoading, isLoaded, hasError } }, loadedCount, isLoaded, loadingCount, isLoading, errorCount, hasError }
+- context.local.data?.['slider']?.['allImagesLoaded'] - Boolean indicating if all images across all slides have finished loading successfully
 bullet only local context:
 - context.local.data?.['bullet']?.['isCurrent'] - true if current bullet
 - context.local.data?.['bullet']?.['currentBulletIndex'] - current bullet index
+
+***Exposed Variables:***
+- slideImageStates: ***READ ONLY*** Object containing image loading states per slide with slide-level aggregates. Structure: { [slideIndex]: { images: { [imageIndex]: { isLoading, isLoaded, hasError } }, loadedCount, isLoaded, loadingCount, isLoading, errorCount, hasError } }. (path: variables['current_element_uid-slideImageStates'])
+- allImagesLoaded: ***READ ONLY*** Boolean indicating if all images across all slides have finished loading successfully. (path: variables['current_element_uid-allImagesLoaded'])
 
 Example:
 <elements>
