@@ -69,6 +69,7 @@ import { useImageTracking } from './useImageTracking.js';
 export default {
     props: {
         content: { type: Object, required: true },
+        uid: { type: String, required: true },
         wwFrontState: { type: Object, required: true },
         /* wwEditor:start */
         wwEditorState: { type: Object, required: true },
@@ -362,16 +363,16 @@ export default {
         });
 
         // Create component variables for external binding (accessible in WeWeb editor)
-        console.log('🔧 [WW-SLIDER] Creating component variables with UID:', props.content.uid);
+        console.log('🔧 [WW-SLIDER] Creating component variables with UID:', props.uid);
         console.log('🔧 [WW-SLIDER] Component props:', {
-            uid: props.content.uid,
+            uid: props.uid,
             sectionId: props.content.sectionId,
             isSelected: isSelected.value,
             isEditing: isEditing.value
         });
         
         const slideImageStatesVariable = wwLib.wwVariable.useComponentVariable({
-            uid: props.content.uid || 'ww-slider',
+            uid: props.uid,
             name: 'slideImageStates',
             defaultValue: slideImageStatesWithAggregates,
             type: 'any',
@@ -380,7 +381,7 @@ export default {
         console.log('✅ [WW-SLIDER] slideImageStatesVariable created:', slideImageStatesVariable);
 
         const allImagesLoadedVariable = wwLib.wwVariable.useComponentVariable({
-            uid: props.content.uid || 'ww-slider',
+            uid: props.uid,
             name: 'allImagesLoaded', 
             defaultValue: allImagesLoaded,
             type: 'boolean',
