@@ -288,9 +288,55 @@ export default {
 
         const removeSlide = index => {
             const mainLayoutContent = [...props.content.mainLayoutContent];
+            const slideLabels = [...(props.content.slideLabels || [])];
+            
             mainLayoutContent.splice(index, 1);
+            if (slideLabels.length > index) {
+                slideLabels.splice(index, 1);
+            }
 
-            emit('update:content', { mainLayoutContent });
+            emit('update:content', { mainLayoutContent, slideLabels });
+        };
+
+        const moveSlideUp = index => {
+            if (index <= 0) return;
+            
+            const mainLayoutContent = [...props.content.mainLayoutContent];
+            const slideLabels = [...(props.content.slideLabels || [])];
+            
+            [mainLayoutContent[index], mainLayoutContent[index - 1]] = [mainLayoutContent[index - 1], mainLayoutContent[index]];
+            if (slideLabels.length > index) {
+                [slideLabels[index], slideLabels[index - 1]] = [slideLabels[index - 1], slideLabels[index]];
+            }
+            
+            emit('update:content', { mainLayoutContent, slideLabels });
+        };
+
+        const moveSlideDown = index => {
+            if (index >= props.content.mainLayoutContent.length - 1) return;
+            
+            const mainLayoutContent = [...props.content.mainLayoutContent];
+            const slideLabels = [...(props.content.slideLabels || [])];
+            
+            [mainLayoutContent[index], mainLayoutContent[index + 1]] = [mainLayoutContent[index + 1], mainLayoutContent[index]];
+            if (slideLabels.length > index + 1) {
+                [slideLabels[index], slideLabels[index + 1]] = [slideLabels[index + 1], slideLabels[index]];
+            }
+            
+            emit('update:content', { mainLayoutContent, slideLabels });
+        };
+
+        const updateSlideLabel = ({ index, label }) => {
+            const slideLabels = [...(props.content.slideLabels || [])];
+            
+            // Ensure the array is long enough
+            while (slideLabels.length <= index) {
+                slideLabels.push(null);
+            }
+            
+            slideLabels[index] = label;
+            
+            emit('update:content', { slideLabels });
         };
         /* wwEditor:end */
 
@@ -417,6 +463,9 @@ export default {
             /* wwEditor:start */
             addSlide,
             removeSlide,
+            moveSlideUp,
+            moveSlideDown,
+            updateSlideLabel,
             /* wwEditor:end */
         };
     },

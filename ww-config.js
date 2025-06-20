@@ -21,6 +21,62 @@ export default {
             ['mousewheelForceToAxis', 'mousewheelInvert', 'mousewheelSensitivity'],
         ],
     },
+    actions: [
+        {
+            action: 'addSlide',
+            label: { en: 'Add slide' },
+        },
+        {
+            action: 'removeSlide',
+            label: { en: 'Remove slide' },
+            args: [
+                {
+                    name: 'index',
+                    type: 'number',
+                    label: { en: 'Slide index' },
+                },
+            ],
+        },
+        {
+            action: 'moveSlideUp',
+            label: { en: 'Move slide up' },
+            args: [
+                {
+                    name: 'index',
+                    type: 'number',
+                    label: { en: 'Slide index' },
+                },
+            ],
+        },
+        {
+            action: 'moveSlideDown',
+            label: { en: 'Move slide down' },
+            args: [
+                {
+                    name: 'index',
+                    type: 'number',
+                    label: { en: 'Slide index' },
+                },
+            ],
+        },
+        {
+            action: 'updateSlideLabel',
+            label: { en: 'Update slide label' },
+            args: [
+                {
+                    name: 'payload',
+                    type: 'object',
+                    label: { en: 'Slide data' },
+                    options: {
+                        item: {
+                            index: { type: 'number', label: { en: 'Slide index' } },
+                            label: { type: 'string', label: { en: 'New label' } },
+                        },
+                    },
+                },
+            ],
+        },
+    ],
     properties: {
         mainLayoutContent: {
             label: {
@@ -65,12 +121,17 @@ export default {
 
                 return {
                     labels: _content.map((_, index) => ({
-                        label: `slide ${index + 1}`,
+                        label: content.slideLabels?.[index] || `slide ${index + 1}`,
+                        customizable: true,
                     })),
                     prefixLabel: 'Slide',
                     nbTabs: _content.length,
                     add: 'addSlide',
                     remove: 'removeSlide',
+                    orderable: true,
+                    moveUp: 'moveSlideUp',
+                    moveDown: 'moveSlideDown',
+                    updateLabel: 'updateSlideLabel',
                     fixed: isBound,
                 };
             },
@@ -259,6 +320,10 @@ export default {
             hidden: true,
             isArray: false,
             defaultValue: { isWwObject: true, type: 'ww-icon' },
+        },
+        slideLabels: {
+            hidden: true,
+            defaultValue: [],
         },
     },
 };
