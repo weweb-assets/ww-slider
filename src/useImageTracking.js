@@ -6,7 +6,20 @@ export function useImageTracking(swiperRef, nbOfSlides) {
   let mutationObserver = null;
 
   const initializeSlideImageState = (slideIndex, imageCount) => {
-    slideImageStates.value[slideIndex] = {};
+    // Use Vue.set equivalent to ensure reactivity
+    if (!slideImageStates.value[slideIndex]) {
+      slideImageStates.value[slideIndex] = {};
+    }
+    
+    // Clear existing states that are beyond the new image count
+    const currentKeys = Object.keys(slideImageStates.value[slideIndex]);
+    for (const key of currentKeys) {
+      if (parseInt(key) >= imageCount) {
+        delete slideImageStates.value[slideIndex][key];
+      }
+    }
+    
+    // Initialize states for all images
     for (let i = 0; i < imageCount; i++) {
       slideImageStates.value[slideIndex][i] = { 
         isLoading: true, 
@@ -14,16 +27,21 @@ export function useImageTracking(swiperRef, nbOfSlides) {
         hasError: false 
       };
     }
+    
+    // Force reactivity update
+    slideImageStates.value = { ...slideImageStates.value };
   };
 
   const updateImageState = (slideIndex, imageIndex, state) => {
     if (slideImageStates.value[slideIndex]?.[imageIndex]) {
       Object.assign(slideImageStates.value[slideIndex][imageIndex], state);
+      // Force reactivity update
+      slideImageStates.value = { ...slideImageStates.value };
     }
   };
 
   const setupImageListeners = (slideIndex) => {
-    const slideElement = swiperRef.value?.querySelector(`.swiper-slide:nth-child(${slideIndex + 1})`);
+    const slideElement = swiperRef.value?.querySelector(`.swiper-slide[data-swiper-slide-index="${slideIndex}"]`);
     if (!slideElement) return;
     
     const images = slideElement.querySelectorAll('img');
@@ -96,7 +114,8 @@ export function useImageTracking(swiperRef, nbOfSlides) {
             
             // Only proceed if we found a slide within this slider instance
             if (slideElement && slideElement.classList.contains('swiper-slide') && swiperRef.value.contains(slideElement)) {
-              const slideIndex = Array.from(slideElement.parentElement.children).indexOf(slideElement);
+              const dataSlideIndex = slideElement.getAttribute('data-swiper-slide-index');
+              const slideIndex = dataSlideIndex !== null ? parseInt(dataSlideIndex) : Array.from(slideElement.parentElement.children).indexOf(slideElement);
               affectedSlides.add(slideIndex);
             }
           }
@@ -112,7 +131,8 @@ export function useImageTracking(swiperRef, nbOfSlides) {
             }
             
             if (slideElement && slideElement.classList.contains('swiper-slide')) {
-              const slideIndex = Array.from(slideElement.parentElement.children).indexOf(slideElement);
+              const dataSlideIndex = slideElement.getAttribute('data-swiper-slide-index');
+              const slideIndex = dataSlideIndex !== null ? parseInt(dataSlideIndex) : Array.from(slideElement.parentElement.children).indexOf(slideElement);
               affectedSlides.add(slideIndex);
             }
           }
@@ -185,14 +205,15 @@ export function useImageTracking(swiperRef, nbOfSlides) {
 
   const initImageTracking = () => {
     nextTick(() => {
-      // Setup listeners for all current slides
-      for (let i = 0; i < nbOfSlides.value; i++) {
-        setupImageListeners(i);
-      }
-      
-      // Setup mutation observer
       setupMutationObserver();
     });
+  };
+
+  const scanExistingSlides = () => {
+    // Setup listeners for all current slides
+    for (let i = 0; i < nbOfSlides.value; i++) {
+      setupImageListeners(i);
+    }
   };
 
   const cleanup = () => {
@@ -213,6 +234,7 @@ export function useImageTracking(swiperRef, nbOfSlides) {
     slideImageStatesWithAggregates,
     allImagesLoaded,
     initImageTracking,
+    scanExistingSlides,
     cleanup
   };
 }

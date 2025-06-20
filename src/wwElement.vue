@@ -109,7 +109,7 @@ export default {
             return content.length;
         });
 
-        const { slideImageStates, slideImageStatesWithAggregates, allImagesLoaded, initImageTracking } = useImageTracking(swiper, nbOfSlides);
+        const { slideImageStates, slideImageStatesWithAggregates, allImagesLoaded, initImageTracking, scanExistingSlides } = useImageTracking(swiper, nbOfSlides);
 
         const slidesPerView = computed(() => {
             let slidePerView = props.content.slidesPerView;
@@ -267,6 +267,9 @@ export default {
                 sliderIndex.value = swiperInstance.value.realIndex;
 
                 if (resetIndex) slideTo(0);
+
+                // Scan existing slides for images after Swiper is fully initialized
+                scanExistingSlides();
 
                 // Ensures that autoplay does not continue when editing
                 handleAutoplay();
