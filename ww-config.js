@@ -59,6 +59,23 @@ export default {
                 },
             ],
         },
+        {
+            action: 'updateSlideLabel',
+            label: { en: 'Update slide label' },
+            args: [
+                {
+                    name: 'payload',
+                    type: 'object',
+                    label: { en: 'Slide data' },
+                    options: {
+                        item: {
+                            index: { type: 'number', label: { en: 'Slide index' } },
+                            label: { type: 'string', label: { en: 'New label' } },
+                        },
+                    },
+                },
+            ],
+        },
     ],
     properties: {
         mainLayoutContent: {
@@ -104,7 +121,8 @@ export default {
 
                 return {
                     labels: _content.map((_, index) => ({
-                        label: `slide ${index + 1}`,
+                        label: content.slideLabels?.[index] || `slide ${index + 1}`,
+                        customizable: true,
                     })),
                     prefixLabel: 'Slide',
                     nbTabs: _content.length,
@@ -113,6 +131,7 @@ export default {
                     orderable: !isBound,
                     moveUp: 'moveSlideUp',
                     moveDown: 'moveSlideDown',
+                    updateLabel: 'updateSlideLabel',
                     fixed: isBound,
                 };
             },
@@ -301,6 +320,10 @@ export default {
             hidden: true,
             isArray: false,
             defaultValue: { isWwObject: true, type: 'ww-icon' },
+        },
+        slideLabels: {
+            hidden: true,
+            defaultValue: [],
         },
     },
 };
