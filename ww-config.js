@@ -128,7 +128,7 @@ export default {
                     nbTabs: _content.length,
                     add: 'addSlide',
                     remove: 'removeSlide',
-                    orderable: !isBound,
+                    orderable: true,
                     moveUp: 'moveSlideUp',
                     moveDown: 'moveSlideDown',
                     updateLabel: 'updateSlideLabel',
