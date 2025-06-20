@@ -21,6 +21,45 @@ export default {
             ['mousewheelForceToAxis', 'mousewheelInvert', 'mousewheelSensitivity'],
         ],
     },
+    actions: [
+        {
+            action: 'addSlide',
+            label: { en: 'Add slide' },
+        },
+        {
+            action: 'removeSlide',
+            label: { en: 'Remove slide' },
+            args: [
+                {
+                    name: 'index',
+                    type: 'number',
+                    label: { en: 'Slide index' },
+                },
+            ],
+        },
+        {
+            action: 'moveSlideUp',
+            label: { en: 'Move slide up' },
+            args: [
+                {
+                    name: 'index',
+                    type: 'number',
+                    label: { en: 'Slide index' },
+                },
+            ],
+        },
+        {
+            action: 'moveSlideDown',
+            label: { en: 'Move slide down' },
+            args: [
+                {
+                    name: 'index',
+                    type: 'number',
+                    label: { en: 'Slide index' },
+                },
+            ],
+        },
+    ],
     properties: {
         mainLayoutContent: {
             label: {
@@ -71,6 +110,9 @@ export default {
                     nbTabs: _content.length,
                     add: 'addSlide',
                     remove: 'removeSlide',
+                    orderable: !isBound,
+                    moveUp: 'moveSlideUp',
+                    moveDown: 'moveSlideDown',
                     fixed: isBound,
                 };
             },

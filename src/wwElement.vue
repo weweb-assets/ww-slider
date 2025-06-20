@@ -292,6 +292,24 @@ export default {
 
             emit('update:content', { mainLayoutContent });
         };
+
+        const moveSlideUp = index => {
+            if (index <= 0) return;
+            
+            const mainLayoutContent = [...props.content.mainLayoutContent];
+            [mainLayoutContent[index], mainLayoutContent[index - 1]] = [mainLayoutContent[index - 1], mainLayoutContent[index]];
+            
+            emit('update:content', { mainLayoutContent });
+        };
+
+        const moveSlideDown = index => {
+            if (index >= props.content.mainLayoutContent.length - 1) return;
+            
+            const mainLayoutContent = [...props.content.mainLayoutContent];
+            [mainLayoutContent[index], mainLayoutContent[index + 1]] = [mainLayoutContent[index + 1], mainLayoutContent[index]];
+            
+            emit('update:content', { mainLayoutContent });
+        };
         /* wwEditor:end */
 
         /* wwEditor:start */
@@ -417,6 +435,8 @@ export default {
             /* wwEditor:start */
             addSlide,
             removeSlide,
+            moveSlideUp,
+            moveSlideDown,
             /* wwEditor:end */
         };
     },
