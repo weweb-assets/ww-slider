@@ -52,8 +52,9 @@ export function useImageTracking(swiperRef, nbOfSlides) {
       console.log(`[ImageTracking] Slide ${i}: data-swiper-slide-index="${slide.getAttribute('data-swiper-slide-index')}", classes="${slide.className}"`);
     });
     
-    const slideElement = swiperRef.value?.querySelector(`.swiper-slide[data-swiper-slide-index="${slideIndex}"]`);
-    console.log(`[ImageTracking] Found slide element for index ${slideIndex}:`, slideElement);
+    // Find the REAL slide, not duplicates - exclude slides with swiper-slide-duplicate class
+    const slideElement = swiperRef.value?.querySelector(`.swiper-slide[data-swiper-slide-index="${slideIndex}"]:not(.swiper-slide-duplicate)`);
+    console.log(`[ImageTracking] Found slide element for index ${slideIndex} (excluding duplicates):`, slideElement);
     
     if (!slideElement) {
       console.warn(`[ImageTracking] No slide element found for index ${slideIndex}`);
