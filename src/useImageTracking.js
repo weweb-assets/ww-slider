@@ -4,6 +4,7 @@ export function useImageTracking(swiperRef, nbOfSlides) {
   const slideImageStates = ref({});
   const abortControllers = {};
   let mutationObserver = null;
+  let pollingInterval = null;
 
   const initializeSlideImageState = (slideIndex, imageCount) => {
     // Use Vue.set equivalent to ensure reactivity
@@ -246,9 +247,46 @@ export function useImageTracking(swiperRef, nbOfSlides) {
     return true;
   });
 
+  const checkForImageChanges = () => {
+    if (!swiperRef.value) return;
+    
+    // Check each slide for image count changes
+    for (let i = 0; i < nbOfSlides.value; i++) {
+      const slideElement = swiperRef.value.querySelector(`.swiper-slide[data-swiper-slide-index="${i}"]:not(.swiper-slide-duplicate)`);
+      if (!slideElement) continue;
+      
+      const currentImageCount = slideElement.querySelectorAll('img').length;
+      const trackedImageCount = Object.keys(slideImageStates.value[i] || {}).length;
+      
+      if (currentImageCount !== trackedImageCount) {
+        // Image count has changed, re-setup listeners for this slide
+        setupImageListeners(i);
+      }
+    }
+  };
+
+  const startPolling = (interval = 1000) => {
+    // Clear any existing interval
+    stopPolling();
+    
+    // Start polling for changes
+    pollingInterval = setInterval(() => {
+      checkForImageChanges();
+    }, interval);
+  };
+
+  const stopPolling = () => {
+    if (pollingInterval) {
+      clearInterval(pollingInterval);
+      pollingInterval = null;
+    }
+  };
+
   const initImageTracking = () => {
     nextTick(() => {
       setupMutationObserver();
+      // Start polling as a backup for cases where MutationObserver misses changes
+      startPolling();
     });
   };
 
@@ -265,6 +303,9 @@ export function useImageTracking(swiperRef, nbOfSlides) {
       mutationObserver.disconnect();
     }
     
+    // Stop polling
+    stopPolling();
+    
     // Abort all controllers
     Object.values(abortControllers).forEach(controller => controller.abort());
   };
@@ -278,6 +319,8 @@ export function useImageTracking(swiperRef, nbOfSlides) {
     allImagesLoaded,
     initImageTracking,
     scanExistingSlides,
-    cleanup
+    cleanup,
+    startPolling,
+    stopPolling
   };
 }
