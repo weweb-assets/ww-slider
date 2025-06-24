@@ -55,22 +55,50 @@ export function useImageTracking(swiperRef, nbOfSlides) {
     // Find ALL slides with this index
     const allSlidesWithIndex = swiperRef.value?.querySelectorAll(`.swiper-slide[data-swiper-slide-index="${slideIndex}"]`);
     
-    // Filter to find the REAL slide (not duplicates)
+    // Filter by priority to find the REAL slide
     let slideElement = null;
-    if (allSlidesWithIndex) {
+    if (allSlidesWithIndex && allSlidesWithIndex.length > 0) {
+      // Priority 1: Strict filter - no duplicate classes at all
       for (const slide of allSlidesWithIndex) {
-        // Real slides don't have any duplicate class
-        if (!slide.classList.contains('swiper-slide-duplicate') && 
-            !slide.classList.contains('swiper-slide-duplicate-active') &&
-            !slide.classList.contains('swiper-slide-duplicate-prev') &&
-            !slide.classList.contains('swiper-slide-duplicate-next')) {
+        const classes = slide.className;
+        if (!classes.includes('duplicate')) {
           slideElement = slide;
+          console.log(`[ImageTracking] Found slide ${slideIndex} with strict filter (no duplicate classes)`);
           break;
         }
       }
+      
+      // Priority 2: Less strict - allow duplicate-prev/next but not base duplicate
+      if (!slideElement) {
+        for (const slide of allSlidesWithIndex) {
+          if (!slide.classList.contains('swiper-slide-duplicate') && 
+              !slide.classList.contains('swiper-slide-duplicate-active')) {
+            slideElement = slide;
+            console.log(`[ImageTracking] Found slide ${slideIndex} with less strict filter (allowing duplicate-prev/next)`);
+            break;
+          }
+        }
+      }
+      
+      // Priority 3: Even less strict - just take the first one that's not a pure duplicate
+      if (!slideElement) {
+        for (const slide of allSlidesWithIndex) {
+          if (!slide.classList.contains('swiper-slide-duplicate')) {
+            slideElement = slide;
+            console.log(`[ImageTracking] Found slide ${slideIndex} with minimal filter (excluding only base duplicate)`);
+            break;
+          }
+        }
+      }
+      
+      // Priority 4: Fallback - if we still don't have one and we know there should be one, take the first
+      if (!slideElement && slideIndex < nbOfSlides.value) {
+        slideElement = allSlidesWithIndex[0];
+        console.log(`[ImageTracking] Warning: Using fallback for slide ${slideIndex}, taking first available`);
+      }
     }
     
-    console.log(`[ImageTracking] Found slide element for index ${slideIndex} (excluding ALL duplicate variants):`, slideElement);
+    console.log(`[ImageTracking] Final slide element for index ${slideIndex}:`, slideElement);
     
     if (!slideElement) {
       console.warn(`[ImageTracking] No slide element found for index ${slideIndex}`);
