@@ -52,9 +52,25 @@ export function useImageTracking(swiperRef, nbOfSlides) {
       console.log(`[ImageTracking] Slide ${i}: data-swiper-slide-index="${slide.getAttribute('data-swiper-slide-index')}", classes="${slide.className}"`);
     });
     
-    // Find the REAL slide, not duplicates - exclude slides with swiper-slide-duplicate class
-    const slideElement = swiperRef.value?.querySelector(`.swiper-slide[data-swiper-slide-index="${slideIndex}"]:not(.swiper-slide-duplicate)`);
-    console.log(`[ImageTracking] Found slide element for index ${slideIndex} (excluding duplicates):`, slideElement);
+    // Find ALL slides with this index
+    const allSlidesWithIndex = swiperRef.value?.querySelectorAll(`.swiper-slide[data-swiper-slide-index="${slideIndex}"]`);
+    
+    // Filter to find the REAL slide (not duplicates)
+    let slideElement = null;
+    if (allSlidesWithIndex) {
+      for (const slide of allSlidesWithIndex) {
+        // Real slides don't have any duplicate class
+        if (!slide.classList.contains('swiper-slide-duplicate') && 
+            !slide.classList.contains('swiper-slide-duplicate-active') &&
+            !slide.classList.contains('swiper-slide-duplicate-prev') &&
+            !slide.classList.contains('swiper-slide-duplicate-next')) {
+          slideElement = slide;
+          break;
+        }
+      }
+    }
+    
+    console.log(`[ImageTracking] Found slide element for index ${slideIndex} (excluding ALL duplicate variants):`, slideElement);
     
     if (!slideElement) {
       console.warn(`[ImageTracking] No slide element found for index ${slideIndex}`);
