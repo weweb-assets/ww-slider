@@ -6,6 +6,7 @@ export function useImageTracking(swiperRef, nbOfSlides) {
   let mutationObserver = null;
 
   const initializeSlideImageState = (slideIndex, imageCount) => {
+    console.log(`[ImageTracking] Initializing state for slide ${slideIndex} with ${imageCount} images`);
     // Use Vue.set equivalent to ensure reactivity
     if (!slideImageStates.value[slideIndex]) {
       slideImageStates.value[slideIndex] = {};
@@ -41,10 +42,26 @@ export function useImageTracking(swiperRef, nbOfSlides) {
   };
 
   const setupImageListeners = (slideIndex) => {
+    console.log(`[ImageTracking] Setting up listeners for slide ${slideIndex}`);
+    console.log('[ImageTracking] Looking for slides in:', swiperRef.value);
+    
+    // Log all slides with their data-swiper-slide-index
+    const allSlides = swiperRef.value?.querySelectorAll('.swiper-slide');
+    console.log(`[ImageTracking] Total slides found: ${allSlides?.length || 0}`);
+    allSlides?.forEach((slide, i) => {
+      console.log(`[ImageTracking] Slide ${i}: data-swiper-slide-index="${slide.getAttribute('data-swiper-slide-index')}", classes="${slide.className}"`);
+    });
+    
     const slideElement = swiperRef.value?.querySelector(`.swiper-slide[data-swiper-slide-index="${slideIndex}"]`);
-    if (!slideElement) return;
+    console.log(`[ImageTracking] Found slide element for index ${slideIndex}:`, slideElement);
+    
+    if (!slideElement) {
+      console.warn(`[ImageTracking] No slide element found for index ${slideIndex}`);
+      return;
+    }
     
     const images = slideElement.querySelectorAll('img');
+    console.log(`[ImageTracking] Found ${images.length} images in slide ${slideIndex}`);
     
     // Cleanup existing controller
     if (abortControllers[slideIndex]) {
@@ -106,17 +123,25 @@ export function useImageTracking(swiperRef, nbOfSlides) {
           );
           
           if (hasImageChanges) {
+            console.log('[ImageTracking] Detected image changes in mutation:', mutation);
+            console.log('[ImageTracking] Mutation target:', mutation.target);
+            
             // Find which slide was affected - but only within THIS slider
             let slideElement = mutation.target;
             while (slideElement && slideElement !== swiperRef.value && !slideElement.classList.contains('swiper-slide')) {
               slideElement = slideElement.parentElement;
             }
             
+            console.log('[ImageTracking] Found slide element from mutation:', slideElement);
+            
             // Only proceed if we found a slide within this slider instance
             if (slideElement && slideElement.classList.contains('swiper-slide') && swiperRef.value.contains(slideElement)) {
               const dataSlideIndex = slideElement.getAttribute('data-swiper-slide-index');
               const slideIndex = dataSlideIndex !== null ? parseInt(dataSlideIndex) : Array.from(slideElement.parentElement.children).indexOf(slideElement);
+              console.log(`[ImageTracking] Slide affected: index=${slideIndex}, data-swiper-slide-index="${dataSlideIndex}"`);
               affectedSlides.add(slideIndex);
+            } else {
+              console.warn('[ImageTracking] Could not determine which slide was affected');
             }
           }
         }
@@ -140,12 +165,14 @@ export function useImageTracking(swiperRef, nbOfSlides) {
       });
       
       // Re-setup listeners for affected slides
+      console.log(`[ImageTracking] Affected slides to re-setup: ${Array.from(affectedSlides).join(', ')}`);
       affectedSlides.forEach(slideIndex => {
         setupImageListeners(slideIndex);
       });
     });
     
     // Observe only THIS slider's wrapper
+    console.log('[ImageTracking] Starting mutation observer on:', swiperRef.value);
     mutationObserver.observe(swiperRef.value, {
       childList: true,
       subtree: true,
@@ -210,6 +237,7 @@ export function useImageTracking(swiperRef, nbOfSlides) {
   };
 
   const scanExistingSlides = () => {
+    console.log(`[ImageTracking] Scanning existing slides. Total slides: ${nbOfSlides.value}`);
     // Setup listeners for all current slides
     for (let i = 0; i < nbOfSlides.value; i++) {
       setupImageListeners(i);
