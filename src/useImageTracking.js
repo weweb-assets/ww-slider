@@ -1,10 +1,28 @@
-import { ref, computed, nextTick, onBeforeUnmount } from 'vue';
+import { ref, computed, nextTick, onBeforeUnmount, watch } from 'vue';
 
 export function useImageTracking(swiperRef, nbOfSlides) {
   const slideImageStates = ref({});
   const abortControllers = {};
   let mutationObserver = null;
   let pollingInterval = null;
+
+  const cleanupRemovedSlides = () => {
+    // Remove entries for slides that no longer exist
+    const currentSlideIndices = Object.keys(slideImageStates.value).map(k => parseInt(k));
+    for (const slideIndex of currentSlideIndices) {
+      if (slideIndex >= nbOfSlides.value) {
+        // Clean up abort controller for this slide
+        if (abortControllers[slideIndex]) {
+          abortControllers[slideIndex].abort();
+          delete abortControllers[slideIndex];
+        }
+        // Remove the slide's image states
+        delete slideImageStates.value[slideIndex];
+      }
+    }
+    // Force reactivity update
+    slideImageStates.value = { ...slideImageStates.value };
+  };
 
   const initializeSlideImageState = (slideIndex, imageCount) => {
     // Use Vue.set equivalent to ensure reactivity
@@ -310,6 +328,14 @@ export function useImageTracking(swiperRef, nbOfSlides) {
     Object.values(abortControllers).forEach(controller => controller.abort());
   };
 
+  // Watch for changes in number of slides
+  watch(nbOfSlides, (newValue, oldValue) => {
+    if (newValue < oldValue) {
+      // Slides were removed, clean up their data
+      cleanupRemovedSlides();
+    }
+  });
+
   // Cleanup on unmount
   onBeforeUnmount(cleanup);
 
@@ -320,6 +346,7 @@ export function useImageTracking(swiperRef, nbOfSlides) {
     initImageTracking,
     scanExistingSlides,
     cleanup,
+    cleanupRemovedSlides,
     startPolling,
     stopPolling
   };
