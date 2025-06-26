@@ -304,10 +304,13 @@ export default {
             const mainLayoutContent = [...props.content.mainLayoutContent];
             const slideLabels = [...(props.content.slideLabels || [])];
             
-            [mainLayoutContent[index], mainLayoutContent[index - 1]] = [mainLayoutContent[index - 1], mainLayoutContent[index]];
-            if (slideLabels.length > index) {
-                [slideLabels[index], slideLabels[index - 1]] = [slideLabels[index - 1], slideLabels[index]];
+            // Ensure slideLabels array has default labels for all slides
+            while (slideLabels.length < mainLayoutContent.length) {
+                slideLabels.push(`Slide ${slideLabels.length + 1}`);
             }
+            
+            [mainLayoutContent[index], mainLayoutContent[index - 1]] = [mainLayoutContent[index - 1], mainLayoutContent[index]];
+            [slideLabels[index], slideLabels[index - 1]] = [slideLabels[index - 1], slideLabels[index]];
             
             emit('update:content', { mainLayoutContent, slideLabels });
         };
@@ -318,10 +321,13 @@ export default {
             const mainLayoutContent = [...props.content.mainLayoutContent];
             const slideLabels = [...(props.content.slideLabels || [])];
             
-            [mainLayoutContent[index], mainLayoutContent[index + 1]] = [mainLayoutContent[index + 1], mainLayoutContent[index]];
-            if (slideLabels.length > index + 1) {
-                [slideLabels[index], slideLabels[index + 1]] = [slideLabels[index + 1], slideLabels[index]];
+            // Ensure slideLabels array has default labels for all slides
+            while (slideLabels.length < mainLayoutContent.length) {
+                slideLabels.push(`Slide ${slideLabels.length + 1}`);
             }
+            
+            [mainLayoutContent[index], mainLayoutContent[index + 1]] = [mainLayoutContent[index + 1], mainLayoutContent[index]];
+            [slideLabels[index], slideLabels[index + 1]] = [slideLabels[index + 1], slideLabels[index]];
             
             emit('update:content', { mainLayoutContent, slideLabels });
         };
