@@ -275,15 +275,23 @@ export default {
         /* wwEditor:start */
         const addSlide = async () => {
             const mainLayoutContent = [...props.content.mainLayoutContent];
+            const slideLabels = [...(props.content.slideLabels || [])];
+
+            // Ensure slideLabels array has default labels for all existing slides
+            while (slideLabels.length < mainLayoutContent.length) {
+                slideLabels.push(`Slide ${slideLabels.length + 1}`);
+            }
 
             if (mainLayoutContent.length === 0) {
                 const slide = await createElement('ww-flexbox');
                 mainLayoutContent.push(slide);
+                slideLabels.push(`Slide 1`);
             } else {
                 const { uid } = await cloneElement(mainLayoutContent[mainLayoutContent.length - 1].uid);
                 mainLayoutContent.push(uid);
+                slideLabels.push(`Slide ${mainLayoutContent.length}`);
             }
-            emit('update:content', { mainLayoutContent });
+            emit('update:content', { mainLayoutContent, slideLabels });
         };
 
         const removeSlide = index => {
