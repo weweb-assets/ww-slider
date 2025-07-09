@@ -275,22 +275,82 @@ export default {
         /* wwEditor:start */
         const addSlide = async () => {
             const mainLayoutContent = [...props.content.mainLayoutContent];
+            const slideLabels = [...(props.content.slideLabels || [])];
+
+            // Ensure slideLabels array has default labels for all existing slides
+            while (slideLabels.length < mainLayoutContent.length) {
+                slideLabels.push(`Slide ${slideLabels.length + 1}`);
+            }
 
             if (mainLayoutContent.length === 0) {
                 const slide = await createElement('ww-flexbox');
                 mainLayoutContent.push(slide);
+                slideLabels.push(`Slide 1`);
             } else {
                 const { uid } = await cloneElement(mainLayoutContent[mainLayoutContent.length - 1].uid);
                 mainLayoutContent.push(uid);
+                slideLabels.push(`Slide ${mainLayoutContent.length}`);
             }
-            emit('update:content', { mainLayoutContent });
+            emit('update:content', { mainLayoutContent, slideLabels });
         };
 
         const removeSlide = index => {
             const mainLayoutContent = [...props.content.mainLayoutContent];
+            const slideLabels = [...(props.content.slideLabels || [])];
+            
             mainLayoutContent.splice(index, 1);
+            if (slideLabels.length > index) {
+                slideLabels.splice(index, 1);
+            }
 
-            emit('update:content', { mainLayoutContent });
+            emit('update:content', { mainLayoutContent, slideLabels });
+        };
+
+        const moveSlideUp = index => {
+            if (index <= 0) return;
+            
+            const mainLayoutContent = [...props.content.mainLayoutContent];
+            const slideLabels = [...(props.content.slideLabels || [])];
+            
+            // Ensure slideLabels array has default labels for all slides
+            while (slideLabels.length < mainLayoutContent.length) {
+                slideLabels.push(`Slide ${slideLabels.length + 1}`);
+            }
+            
+            [mainLayoutContent[index], mainLayoutContent[index - 1]] = [mainLayoutContent[index - 1], mainLayoutContent[index]];
+            [slideLabels[index], slideLabels[index - 1]] = [slideLabels[index - 1], slideLabels[index]];
+            
+            emit('update:content', { mainLayoutContent, slideLabels });
+        };
+
+        const moveSlideDown = index => {
+            if (index >= props.content.mainLayoutContent.length - 1) return;
+            
+            const mainLayoutContent = [...props.content.mainLayoutContent];
+            const slideLabels = [...(props.content.slideLabels || [])];
+            
+            // Ensure slideLabels array has default labels for all slides
+            while (slideLabels.length < mainLayoutContent.length) {
+                slideLabels.push(`Slide ${slideLabels.length + 1}`);
+            }
+            
+            [mainLayoutContent[index], mainLayoutContent[index + 1]] = [mainLayoutContent[index + 1], mainLayoutContent[index]];
+            [slideLabels[index], slideLabels[index + 1]] = [slideLabels[index + 1], slideLabels[index]];
+            
+            emit('update:content', { mainLayoutContent, slideLabels });
+        };
+
+        const updateSlideLabel = ({ index, label }) => {
+            const slideLabels = [...(props.content.slideLabels || [])];
+            
+            // Ensure the array is long enough
+            while (slideLabels.length <= index) {
+                slideLabels.push(null);
+            }
+            
+            slideLabels[index] = label;
+            
+            emit('update:content', { slideLabels });
         };
         /* wwEditor:end */
 
@@ -417,6 +477,9 @@ export default {
             /* wwEditor:start */
             addSlide,
             removeSlide,
+            moveSlideUp,
+            moveSlideDown,
+            updateSlideLabel,
             /* wwEditor:end */
         };
     },
