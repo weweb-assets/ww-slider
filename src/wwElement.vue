@@ -76,7 +76,7 @@ export default {
     emits: ['update:content', 'update:sidepanel-content'],
     setup(props, { emit }) {
         /* wwEditor:start */
-        const { createElement, cloneElement } = wwLib.useCreateElement();
+        const { createElement, cloneElement } = wwLib.wwElement.useCreate();
         /* wwEditor:end */
 
         const swiper = ref(null);
