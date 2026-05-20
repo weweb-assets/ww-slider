@@ -45,7 +45,13 @@
             "name": "effect",
             "description": "Transition effect used when switching slides.",
             "type": "string",
-            "options": ["slide", "fade", "coverflow", "flip", "cards"],
+            "options": [
+                "slide",
+                "fade",
+                "coverflow",
+                "flip",
+                "cards"
+            ],
             "responsive": true
         },
         {
@@ -213,12 +219,16 @@
             "name": "navigationIcons",
             "description": "The two navigation arrow icons (previous and next). Contains exactly two icon elements.",
             "type": "array",
-            "tag": ["ww-icon", "ww-icon"],
+            "tag": [
+                "ww-icon",
+                "ww-icon"
+            ],
             "required": true
         },
         {
             "name": "bulletsIcons",
             "description": "The pagination bullet icon element. A single element used as template for all pagination dots.",
+            "type": "object",
             "tag": "ww-icon",
             "required": true
         }
