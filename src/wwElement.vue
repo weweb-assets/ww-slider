@@ -50,7 +50,8 @@
 <script>
 import { nextTick } from 'vue';
 
-import Swiper, { EffectFlip, EffectFade, EffectCoverflow, EffectCube, EffectCards, Autoplay, Mousewheel } from 'swiper';
+import Swiper from 'swiper';
+import { EffectFlip, EffectFade, EffectCoverflow, EffectCube, EffectCards, Autoplay, Mousewheel } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/effect-fade';
 import 'swiper/css/effect-coverflow';
