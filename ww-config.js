@@ -21,6 +21,14 @@ export default {
             ['mousewheelForceToAxis', 'mousewheelInvert', 'mousewheelSensitivity'],
         ],
     },
+    triggerEvents: [
+        {
+            name: 'slideChange',
+            label: { en: 'On slide change' },
+            event: { slideIndex: 0 },
+            default: true,
+        },
+    ],
     actions: [
         {
             action: 'addSlide',
@@ -75,6 +83,25 @@ export default {
                     },
                 },
             ],
+        },
+        {
+            action: 'slideTo',
+            label: { en: 'Go to slide' },
+            args: [
+                {
+                    name: 'index',
+                    type: 'number',
+                    label: { en: 'Slide index' },
+                },
+            ],
+        },
+        {
+            action: 'slideNext',
+            label: { en: 'Next slide' },
+        },
+        {
+            action: 'slidePrev',
+            label: { en: 'Previous slide' },
         },
     ],
     properties: {
