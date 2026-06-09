@@ -135,7 +135,15 @@
             "description": "Applied to the pagination bullet icon of the currently active slide (alias for Current Slide)."
         }
     ],
-    "events": [],
+    "events": [
+        {
+            "name": "slideChange",
+            "description": "Triggered whenever the active slide changes, whether via navigation arrows, pagination bullets, autoplay, mousewheel, or a slideTo/slideNext/slidePrev action.",
+            "payload": {
+                "slideIndex": 0
+            }
+        }
+    ],
     "localContext": [
         {
             "path": "sliderIndex",
@@ -217,7 +225,7 @@
         },
         {
             "name": "navigationIcons",
-            "description": "The two navigation arrow icons (previous and next). Contains exactly two icon elements.",
+            "description": "The two navigation arrow icons ([0] = previous, [1] = next), each a selectable element. The component places them on the left/right by default, but the default can be asymmetric (the right arrow may sit inset from the right edge). Set the icon, size and color, and adjust the elements' position/margins so both arrows align cleanly to the slider edges.",
             "type": "array",
             "tag": [
                 "ww-icon",
@@ -227,13 +235,19 @@
         },
         {
             "name": "bulletsIcons",
-            "description": "The pagination bullet icon element. A single element used as template for all pagination dots.",
+            "description": "The pagination bullet icon element (a single element used as the template for every dot). The component lays out the bullet row centered at the bottom and applies the 'Current Slide'/'active' state to the active dot. Set the icon, size and color, style the 'Current Slide' state for the active look, and adjust the element's position/spacing if the row needs it.",
             "type": "object",
             "tag": "ww-icon",
             "required": true
         }
     ],
     "variables": [
+        {
+            "name": "sliderIndex",
+            "description": "The current active slide index (0-based). Bind it anywhere on the page (e.g. a 'Slide X of Y' counter or progress indicator) — it updates automatically as the user navigates.",
+            "type": "number",
+            "readonly": true
+        },
         {
             "name": "slideImageStates",
             "description": "Object tracking the loading state of images in each slide, with per-slide details and aggregate statistics.",
@@ -254,7 +268,9 @@
         "automaticTiming must include the 's' unit suffix (e.g. '3s').",
         "transitionDuration must include the 'ms' unit suffix (e.g. '300ms').",
         "When using loop mode, ensure there are enough slides for the loop to work properly (at least 2x slidesPerView).",
-        "The slider uses the Swiper library internally"
+        "The slider uses the Swiper library internally.",
+        "ARROWS & BULLETS ARE SELECTABLE ELEMENTS YOU CAN REPOSITION: the component gives the navigation arrows a default left/right placement and the pagination bullets a centered row at the bottom, but that default is not always symmetric — the right (next) arrow in particular can sit visibly inset from the right edge. Each arrow and the bullet icon are individual WeWeb elements: adjust their position, margins or alignment so the left arrow sits at the left edge and the right arrow at the right edge (a small few-px margin is fine) and the bullets stay evenly spaced. Do not assume the component's default placement is pixel-perfect — fix the alignment on the elements themselves when it looks off.",
+        "ACTIVE BULLET STYLING: to make the current pagination bullet look different from the others, style the 'Current Slide' state (alias 'active') on the bulletsIcons element. Do NOT try to compute which bullet is active or bind an isActive condition yourself — the component applies the 'Current Slide'/'active' state to the right bullet automatically."
     ],
     "examples": [
         {
