@@ -215,6 +215,55 @@
             "label": "Slide Prev",
             "actionName": "slidePrev",
             "description": "Navigate to the previous slide."
+        },
+        {
+            "label": "Add slide",
+            "actionName": "addSlide",
+            "description": "Append a new slide to the slider."
+        },
+        {
+            "label": "Remove slide",
+            "actionName": "removeSlide",
+            "description": "Remove the slide at the given index.",
+            "args": [
+                {
+                    "name": "Slide index",
+                    "type": "number"
+                }
+            ]
+        },
+        {
+            "label": "Move slide up",
+            "actionName": "moveSlideUp",
+            "description": "Move the slide at the given index one position earlier.",
+            "args": [
+                {
+                    "name": "Slide index",
+                    "type": "number"
+                }
+            ]
+        },
+        {
+            "label": "Move slide down",
+            "actionName": "moveSlideDown",
+            "description": "Move the slide at the given index one position later.",
+            "args": [
+                {
+                    "name": "Slide index",
+                    "type": "number"
+                }
+            ]
+        },
+        {
+            "label": "Update slide label",
+            "actionName": "updateSlideLabel",
+            "description": "Update the label of a slide. Takes an object with the slide index and the new label.",
+            "args": [
+                {
+                    "name": "Slide data",
+                    "type": "object"
+                }
+            ]
         }
     ],
     "slots": [
@@ -235,7 +284,7 @@
         },
         {
             "name": "bulletsIcons",
-            "description": "The pagination bullet icon element (a single element used as the template for every dot). The component lays out the bullet row centered at the bottom and applies the 'Current Slide'/'active' state to the active dot. Set the icon, size and color, style the 'Current Slide' state for the active look, and adjust the element's position/spacing if the row needs it.",
+            "description": "The pagination bullet icon element (a single element used as the template for every dot). The component lays out the bullet row centered at the bottom and applies the 'Current Slide'/'active' state to the active dot. You MUST set the icon, size and color; you MUST add horizontal spacing between dots with a left/right margin on this element (for example margin: 0 4px) because the default row has no gap and the dots will touch otherwise; and you MUST style the 'Current Slide' state with a clearly visible difference (for example full opacity / brand color while the default state is dimmed) so the active dot stands out.",
             "type": "object",
             "tag": "ww-icon",
             "required": true
@@ -270,7 +319,8 @@
         "When using loop mode, ensure there are enough slides for the loop to work properly (at least 2x slidesPerView).",
         "The slider uses the Swiper library internally.",
         "ARROWS & BULLETS ARE SELECTABLE ELEMENTS YOU CAN REPOSITION: the component gives the navigation arrows a default left/right placement and the pagination bullets a centered row at the bottom, but that default is not always symmetric — the right (next) arrow in particular can sit visibly inset from the right edge. Each arrow and the bullet icon are individual WeWeb elements: adjust their position, margins or alignment so the left arrow sits at the left edge and the right arrow at the right edge (a small few-px margin is fine) and the bullets stay evenly spaced. Do not assume the component's default placement is pixel-perfect — fix the alignment on the elements themselves when it looks off.",
-        "ACTIVE BULLET STYLING: to make the current pagination bullet look different from the others, style the 'Current Slide' state (alias 'active') on the bulletsIcons element. Do NOT try to compute which bullet is active or bind an isActive condition yourself — the component applies the 'Current Slide'/'active' state to the right bullet automatically."
+        "ACTIVE BULLET STYLING (REQUIRED whenever pagination is on): the active dot MUST look different from the others. Style the 'Current Slide' state (alias 'active') on the bulletsIcons element with a concrete visible change — for example full opacity and the brand color on 'Current Slide' versus a dimmed color or lower opacity on the default state. Do NOT try to compute which bullet is active or bind an isActive condition yourself — the component applies the 'Current Slide'/'active' state to the right bullet automatically.",
+        "BULLET SPACING (REQUIRED whenever pagination is on): the default bullet row renders the dots flush against each other with no gap. You MUST add spacing yourself by setting a horizontal margin on the bulletsIcons element (for example a 4-6px left/right margin). Do not rely on the component default — without an explicit margin the dots will visibly touch."
     ],
     "examples": [
         {
