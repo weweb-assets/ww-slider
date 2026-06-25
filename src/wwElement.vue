@@ -625,7 +625,6 @@ export default {
 }
 
 .navigation-container {
-    width: 100px;
     position: absolute;
     top: 50%;
 
